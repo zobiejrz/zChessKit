@@ -11,11 +11,16 @@ let package = Package(
             name: "zChessKit",
             targets: ["zChessKit"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/zobiejrz/zBitboard", from: "0.2.0"),
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "zChessKit"),
+            name: "zChessKit",
+            dependencies: ["zBitboard"]
+        ),
         .testTarget(
             name: "zChessKitTests",
             dependencies: ["zChessKit"]
