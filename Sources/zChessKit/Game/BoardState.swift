@@ -763,17 +763,26 @@ struct BoardState: Codable {
             let destbb = Bitboard.squareMask(destSquare)
             
             let capturedPiece: PieceType? = self.whatPieceIsOn(destSquare)
-            
-            // TODO: IMPLEMENT CASTLING
-            
+                        
             let resultingBoardState: BoardState
             if self.playerToMove == .white {
                 let newCastlingRights = self.castlingRights.filter { $0 != .K && $0 != .Q }
+                
+                // TODO: Need to see if king moves 'through' check during castling
+                let newRookBoard: Bitboard
+                if originSquare == .e8 && destSquare == .g8 {
+                    newRookBoard = (self.blackRooks & ~Bitboard.squareMask(.h8)) | Bitboard.squareMask(.f8)
+                } else if originSquare == .e8 && destSquare == .c8 {
+                    newRookBoard = (self.blackRooks & ~Bitboard.squareMask(.a8)) | Bitboard.squareMask(.d8)
+                } else {
+                    newRookBoard = self.whiteRooks
+                }
+                
                 resultingBoardState = BoardState(
                     whitePawns: self.whitePawns,
                     whiteKnights: self.whiteKnights,
                     whiteBishops: self.whiteBishops,
-                    whiteRooks: self.whiteRooks,
+                    whiteRooks: newRookBoard,
                     whiteQueens: self.whiteQueens,
                     whiteKing: destbb,
                     blackPawns: self.blackPawns & ~destbb,
@@ -789,6 +798,16 @@ struct BoardState: Codable {
                 )
             } else {
                 let newCastlingRights = self.castlingRights.filter { $0 != .k && $0 != .q }
+                
+                // TODO: Need to see if king moves 'through' check during castling
+                let newRookBoard: Bitboard
+                if originSquare == .e8 && destSquare == .g8 {
+                    newRookBoard = (self.blackRooks & ~Bitboard.squareMask(.h8)) | Bitboard.squareMask(.f8)
+                } else if originSquare == .e8 && destSquare == .c8 {
+                    newRookBoard = (self.blackRooks & ~Bitboard.squareMask(.a8)) | Bitboard.squareMask(.d8)
+                } else {
+                    newRookBoard = self.blackRooks
+                }
                 resultingBoardState = BoardState(
                     whitePawns: self.whitePawns & ~destbb,
                     whiteKnights: self.whiteKnights & ~destbb,
@@ -799,7 +818,7 @@ struct BoardState: Codable {
                     blackPawns: self.blackPawns,
                     blackKnights: self.blackKnights,
                     blackBishops: self.blackBishops,
-                    blackRooks: self.blackRooks,
+                    blackRooks: newRookBoard,
                     blackQueens: self.blackQueens,
                     blackKing: destbb,
                     plyNumber: self.plyNumber+1,
