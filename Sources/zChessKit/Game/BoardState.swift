@@ -772,7 +772,6 @@ struct BoardState: Codable {
             if self.playerToMove == .white {
                 let newCastlingRights = self.castlingRights.filter { $0 != .K && $0 != .Q }
                 
-                // TODO: Need to see if king moves 'through' check during castling
                 let newRookBoard: Bitboard
                 if originSquare == .e1 && destSquare == .g1 {
                     newRookBoard = (self.whiteRooks & ~Bitboard.squareMask(.h1)) | Bitboard.squareMask(.f1)
@@ -803,7 +802,6 @@ struct BoardState: Codable {
             } else {
                 let newCastlingRights = self.castlingRights.filter { $0 != .k && $0 != .q }
                 
-                // TODO: Need to see if king moves 'through' check during castling
                 let newRookBoard: Bitboard
                 if originSquare == .e8 && destSquare == .g8 {
                     newRookBoard = (self.blackRooks & ~Bitboard.squareMask(.h8)) | Bitboard.squareMask(.f8)
