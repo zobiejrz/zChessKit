@@ -762,7 +762,7 @@ struct BoardState: Codable {
                 
         for move in kingMoves {
             let originSquare = Square(rawValue: move.from.popLSB()!.0)!
-            let originbb = Bitboard.squareMask(originSquare)
+//            let originbb = Bitboard.squareMask(originSquare)
             let destSquare = Square(rawValue: move.to.popLSB()!.0)!
             let destbb = Bitboard.squareMask(destSquare)
             
