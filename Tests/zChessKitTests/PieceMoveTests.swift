@@ -549,3 +549,49 @@ import zBitboard
     #expect(state.isValidMove(piece: .king, from: .g7, to: .h6) != nil, "king should be able to go here")
     #expect(state.isValidMove(piece: .king, from: .g7, to: .h7) != nil, "king should be able to go here")
 }
+
+@Test func testRookMoves() async throws {
+    let state = BoardState(
+        whitePawns: .empty,
+        whiteKnights: .empty,
+        whiteBishops: .empty,
+        whiteRooks: Bitboard.squareMask(.d4),
+        whiteQueens: .empty,
+        whiteKing: .empty,
+        blackPawns: .empty,
+        blackKnights: .empty,
+        blackBishops: .empty,
+        blackRooks: .empty,
+        blackQueens: .empty,
+        blackKing: .empty,
+        plyNumber: 0,
+        playerToMove: .white,
+        enpassantTargetSqauare: .empty,
+        castlingRights: []
+    )
+    let validMoves = state.generateAllLegalMoves()
+    #expect(validMoves.count == 14, "a rook has 14 moves on a blank board from d4")
+}
+
+@Test func testQueenMoves() async throws {
+    let state = BoardState(
+        whitePawns: .empty,
+        whiteKnights: .empty,
+        whiteBishops: .empty,
+        whiteRooks: .empty,
+        whiteQueens: Bitboard.squareMask(.d4),
+        whiteKing: .empty,
+        blackPawns: .empty,
+        blackKnights: .empty,
+        blackBishops: .empty,
+        blackRooks: .empty,
+        blackQueens: .empty,
+        blackKing: .empty,
+        plyNumber: 0,
+        playerToMove: .white,
+        enpassantTargetSqauare: .empty,
+        castlingRights: []
+    )
+    let validMoves = state.generateAllLegalMoves()
+    #expect(validMoves.count == 27, "a queen has 27 moves on a blank board from d4")
+}

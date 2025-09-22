@@ -19,13 +19,14 @@ class Lexer {
         SingleCharacterAutomaton(char: ">", type: .R_ANGLE_BRACKET),
         SingleCharacterAutomaton(char: "{", type: .L_CURLY_BRACKET),
         SingleCharacterAutomaton(char: "}", type: .R_CURLY_BRACKET),
+        SingleCharacterAutomaton(char: "/", type: .FORWARD_SLASH),
         NAGAutomaton(),
         SymbolAutomaton(),
         OpenCommandAutomaton()
         ]
     private(set) var tokens: [Token] = []
     
-    @discardableResult func run(pgn: String) -> [Token] {
+    @discardableResult func run(input: String) -> [Token] {
         
         // While we are processing the PGN
         //      loop through each automata
@@ -36,7 +37,7 @@ class Lexer {
         //      Append token to the end of self.tokens
         //      If ever there is no valid token for the current string, throw an error indicating this
         self.tokens = []
-        var remaining = pgn
+        var remaining = input
         
         while remaining.count > 0 {
             
