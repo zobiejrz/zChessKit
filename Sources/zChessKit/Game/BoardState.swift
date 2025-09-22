@@ -277,14 +277,18 @@ struct BoardState: Codable {
         ) & ~self.whitePieces
         
         // add castling moves
-        if self.castlingRights.contains(.K) && originSquare == .e1 {
+        if self.castlingRights.contains(.K) && originSquare == .e1 && !self.isKingInCheck(.white) {
             if !self.allPieces.hasPiece(on: .f1) && !self.allPieces.hasPiece(on: .g1) && self.whiteRooks.hasPiece(on: .h1) {
-                total |= Bitboard.squareMask(.g1)
+                if !self.isKingInCheck(.white, kingLocation: Bitboard.squareMask(.f1)) {
+                    total |= Bitboard.squareMask(.g1)
+                }
             }
         }
-        if self.castlingRights.contains(.Q) && originSquare == .e1 {
+        if self.castlingRights.contains(.Q) && originSquare == .e1 && !self.isKingInCheck(.white) {
             if !self.allPieces.hasPiece(on: .d1) && !self.allPieces.hasPiece(on: .c1) && !self.allPieces.hasPiece(on: .b1) && self.whiteRooks.hasPiece(on: .a1) {
-                total |= Bitboard.squareMask(.c1)
+                if !self.isKingInCheck(.white, kingLocation: Bitboard.squareMask(.d1)) {
+                    total |= Bitboard.squareMask(.c1)
+                }
             }
         }
         
@@ -316,14 +320,18 @@ struct BoardState: Codable {
         ) & ~self.blackPieces
         
         // add castling moves
-        if self.castlingRights.contains(.k) && originSquare == .e8 {
+        if self.castlingRights.contains(.k) && originSquare == .e8 && !self.isKingInCheck(.black) {
             if !self.allPieces.hasPiece(on: .f8) && !self.allPieces.hasPiece(on: .g8) && self.blackRooks.hasPiece(on: .h8) {
-                total |= Bitboard.squareMask(.g8)
+                if !self.isKingInCheck(.white, kingLocation: Bitboard.squareMask(.f8)) {
+                    total |= Bitboard.squareMask(.g8)
+                }
             }
         }
-        if self.castlingRights.contains(.q) && originSquare == .e8 {
+        if self.castlingRights.contains(.q) && originSquare == .e8 && !self.isKingInCheck(.black) {
             if !self.allPieces.hasPiece(on: .d8) && !self.allPieces.hasPiece(on: .c8) && !self.allPieces.hasPiece(on: .b8) && self.blackRooks.hasPiece(on: .a8) {
-                total |= Bitboard.squareMask(.c8)
+                if !self.isKingInCheck(.white, kingLocation: Bitboard.squareMask(.d8)) {
+                    total |= Bitboard.squareMask(.c8)
+                }
             }
         }
         
@@ -406,11 +414,7 @@ struct BoardState: Codable {
     // MARK: - Combined Move Generator (Entry Point)
     
     func generateAllLegalMoves(_ player: PlayerColor? = nil) -> [Move] {
-        
-        
-        
-        // 4. Return resulting legal [Move] list
-        
+                
         let playerToGenerate = player ?? self.playerToMove
         var output: [Move] = []
         
@@ -770,10 +774,10 @@ struct BoardState: Codable {
                 
                 // TODO: Need to see if king moves 'through' check during castling
                 let newRookBoard: Bitboard
-                if originSquare == .e8 && destSquare == .g8 {
-                    newRookBoard = (self.blackRooks & ~Bitboard.squareMask(.h8)) | Bitboard.squareMask(.f8)
-                } else if originSquare == .e8 && destSquare == .c8 {
-                    newRookBoard = (self.blackRooks & ~Bitboard.squareMask(.a8)) | Bitboard.squareMask(.d8)
+                if originSquare == .e1 && destSquare == .g1 {
+                    newRookBoard = (self.whiteRooks & ~Bitboard.squareMask(.h1)) | Bitboard.squareMask(.f1)
+                } else if originSquare == .e1 && destSquare == .c1 {
+                    newRookBoard = (self.whiteRooks & ~Bitboard.squareMask(.a1)) | Bitboard.squareMask(.d1)
                 } else {
                     newRookBoard = self.whiteRooks
                 }
@@ -847,90 +851,94 @@ struct BoardState: Codable {
             output.append(move)
         }
         
-        
+        // 4. Return resulting legal [Move] list
         return output
     }
     
     
     // MARK: - isKingInCheck(_ color: PlayerColor? = nil) -> Bool
     
-    func isKingInCheck(_ color: PlayerColor? = nil) -> Bool {
+    func isKingInCheck(_ color: PlayerColor? = nil, kingLocation: Bitboard? = nil) -> Bool {
         let playerToCheck = color ?? self.playerToMove
         
         if playerToCheck == .white { // see if black pieces attack white king
+            let kingLocation = kingLocation ?? self.whiteKing
             for move in self.generateBlackPawnMoves() {
-                if self.whiteKing & move.to > 0 {
+                if kingLocation & move.to > 0 {
                     return true
                 }
             }
             
             for move in self.generateBlackKnightMoves() {
-                if self.whiteKing & move.to > 0 {
+                if kingLocation & move.to > 0 {
                     return true
                 }
             }
             
             for move in self.generateBlackBishopMoves() {
-                if self.whiteKing & move.to > 0 {
+                if kingLocation & move.to > 0 {
                     return true
                 }
             }
             
             for move in self.generateBlackRookMoves() {
-                if self.whiteKing & move.to > 0 {
+                if kingLocation & move.to > 0 {
                     return true
                 }
             }
             
             for move in self.generateBlackQueenMoves() {
-                if self.whiteKing & move.to > 0 {
+                if kingLocation & move.to > 0 {
                     return true
                 }
             }
             
             // It's weird but will be used to prevent this move from occurring
-            for move in self.generateBlackKingMoves() {
-                if self.whiteKing & move.to > 0 {
-                    return true
-                }
-            }
+            // TODO: This has the danger of infinite loops, so it should be reworked
+//            for move in self.generateBlackKingMoves() {
+//                if kingLocation & move.to > 0 {
+//                    return true
+//                }
+//            }
         } else if playerToCheck == .black { // see if white pieces attack black king
+            let kingLocation = kingLocation ?? self.blackKing
             for move in self.generateWhitePawnMoves() {
-                if self.blackKing & move.to > 0 {
+                if kingLocation & move.to > 0 {
                     return true
                 }
             }
             
             for move in self.generateWhiteKnightMoves() {
-                if self.blackKing & move.to > 0 {
+                if kingLocation & move.to > 0 {
                     return true
                 }
             }
             
             for move in self.generateWhiteBishopMoves() {
-                if self.blackKing & move.to > 0 {
+                if kingLocation & move.to > 0 {
                     return true
                 }
             }
             
             for move in self.generateWhiteRookMoves() {
-                if self.blackKing & move.to > 0 {
+                if kingLocation & move.to > 0 {
                     return true
                 }
             }
             
             for move in self.generateWhiteQueenMoves() {
-                if self.blackKing & move.to > 0 {
+                if kingLocation & move.to > 0 {
                     return true
                 }
             }
             
             // It's weird but will be used to prevent this move from occurring
-            for move in self.generateWhiteKingMoves() {
-                if self.blackKing & move.to > 0 {
-                    return true
-                }
-            }
+            // TODO: This has the danger of infinite loops, so it should be reworked
+//            for move in self.generateWhiteKingMoves() {
+//                if kingLocation & move.to > 0 {
+//                    return true
+//                }
+//            }
         }
         
         return false

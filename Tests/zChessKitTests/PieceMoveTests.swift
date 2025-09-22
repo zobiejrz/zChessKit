@@ -9,6 +9,267 @@ import Testing
 @testable import zChessKit
 import zBitboard
 
+@Test func testKingMoves() async throws {
+    var state = BoardState(
+        whitePawns: .empty,
+        whiteKnights: .empty,
+        whiteBishops: .empty,
+        whiteRooks: .empty,
+        whiteQueens: .empty,
+        whiteKing: Bitboard.squareMask(.e1),
+        blackPawns: .empty,
+        blackKnights: .empty,
+        blackBishops: .empty,
+        blackRooks: .empty,
+        blackQueens: .empty,
+        blackKing: .empty,
+        plyNumber: 1,
+        playerToMove: .white,
+        enpassantTargetSqauare: .empty,
+        castlingRights: [.K, .Q, .k, .q]
+    )
+    
+    #expect(state.generateAllLegalMoves().count(where: { $0.piece == .king }) == 5, "a king on e1 has 5 valid moves")
+    #expect(state.isKingInCheck() == false, "king is in check")
+    
+    state = BoardState(
+        whitePawns: .empty,
+        whiteKnights: .empty,
+        whiteBishops: .empty,
+        whiteRooks: .empty,
+        whiteQueens: .empty,
+        whiteKing: Bitboard.squareMask(.e4),
+        blackPawns: .empty,
+        blackKnights: .empty,
+        blackBishops: .empty,
+        blackRooks: .empty,
+        blackQueens: .empty,
+        blackKing: .empty,
+        plyNumber: 1,
+        playerToMove: .white,
+        enpassantTargetSqauare: .empty,
+        castlingRights: [.K, .Q, .k, .q]
+    )
+    
+    #expect(state.generateAllLegalMoves().count(where: { $0.piece == .king }) == 8, "a king on e1 has 8 valid moves")
+    #expect(state.isKingInCheck() == false, "king is in check")
+    
+    state = BoardState(
+        whitePawns: .empty,
+        whiteKnights: .empty,
+        whiteBishops: .empty,
+        whiteRooks: Bitboard.squareMask(.h1),
+        whiteQueens: .empty,
+        whiteKing: Bitboard.squareMask(.e1),
+        blackPawns: .empty,
+        blackKnights: .empty,
+        blackBishops: .empty,
+        blackRooks: .empty,
+        blackQueens: .empty,
+        blackKing: .empty,
+        plyNumber: 1,
+        playerToMove: .white,
+        enpassantTargetSqauare: .empty,
+        castlingRights: [.K, .Q, .k, .q]
+    )
+    
+    #expect(state.generateAllLegalMoves().count(where: { $0.piece == .king }) == 6, "a king on e1 has 6 valid moves incl. O-O")
+    #expect(state.isKingInCheck() == false, "king is not in check")
+    
+    state = BoardState(
+        whitePawns: .empty,
+        whiteKnights: .empty,
+        whiteBishops: .empty,
+        whiteRooks: Bitboard.squareMask(.a1),
+        whiteQueens: .empty,
+        whiteKing: Bitboard.squareMask(.e1),
+        blackPawns: .empty,
+        blackKnights: .empty,
+        blackBishops: .empty,
+        blackRooks: .empty,
+        blackQueens: .empty,
+        blackKing: .empty,
+        plyNumber: 1,
+        playerToMove: .white,
+        enpassantTargetSqauare: .empty,
+        castlingRights: [.K, .Q, .k, .q]
+    )
+    
+    #expect(state.generateAllLegalMoves().count(where: { $0.piece == .king }) == 6, "a king on e1 has 6 valid moves incl. O-O-O")
+    #expect(state.isKingInCheck() == false, "king is not in check")
+    
+    state = BoardState(
+        whitePawns: .empty,
+        whiteKnights: .empty,
+        whiteBishops: .empty,
+        whiteRooks: Bitboard.squareMask(.a1) | Bitboard.squareMask(.h1),
+        whiteQueens: .empty,
+        whiteKing: Bitboard.squareMask(.e1),
+        blackPawns: .empty,
+        blackKnights: .empty,
+        blackBishops: .empty,
+        blackRooks: .empty,
+        blackQueens: .empty,
+        blackKing: .empty,
+        plyNumber: 1,
+        playerToMove: .white,
+        enpassantTargetSqauare: .empty,
+        castlingRights: [.K, .Q, .k, .q]
+    )
+    
+    #expect(state.generateAllLegalMoves().count(where: { $0.piece == .king }) == 7, "a king on e1 has 7 valid moves incl. O-O & O-O-O")
+    #expect(state.isKingInCheck() == false, "king is not in check")
+    
+    state = BoardState(
+        whitePawns: .empty,
+        whiteKnights: .empty,
+        whiteBishops: .empty,
+        whiteRooks: Bitboard.squareMask(.a1) | Bitboard.squareMask(.h1),
+        whiteQueens: .empty,
+        whiteKing: Bitboard.squareMask(.e1),
+        blackPawns: .empty,
+        blackKnights: .empty,
+        blackBishops: .empty,
+        blackRooks: .empty,
+        blackQueens: .empty,
+        blackKing: .empty,
+        plyNumber: 1,
+        playerToMove: .white,
+        enpassantTargetSqauare: .empty,
+        castlingRights: []
+    )
+    
+    #expect(state.generateAllLegalMoves().count(where: { $0.piece == .king }) == 5, "a king on e1 has 5 valid moves w/o castling rights")
+    #expect(state.isKingInCheck() == false, "king is not in check")
+    
+    state = BoardState(
+        whitePawns: .empty,
+        whiteKnights: .empty,
+        whiteBishops: .empty,
+        whiteRooks: Bitboard.squareMask(.a1) | Bitboard.squareMask(.h1),
+        whiteQueens: .empty,
+        whiteKing: Bitboard.squareMask(.e1),
+        blackPawns: .empty,
+        blackKnights: Bitboard.squareMask(.c3) | Bitboard.squareMask(.g3),
+        blackBishops: .empty,
+        blackRooks: .empty,
+        blackQueens: .empty,
+        blackKing: .empty,
+        plyNumber: 1,
+        playerToMove: .white,
+        enpassantTargetSqauare: .empty,
+        castlingRights: [.K, .Q, .k, .q]
+    )
+    
+    #expect(state.generateAllLegalMoves().count(where: { $0.piece == .king }) == 2, "knights are blocking castling, so 2 moves remain")
+    #expect(state.isKingInCheck() == false, "king is not in check")
+    
+    state = BoardState(
+        whitePawns: .empty,
+        whiteKnights: .empty,
+        whiteBishops: .empty,
+        whiteRooks: Bitboard.squareMask(.a1) | Bitboard.squareMask(.h1),
+        whiteQueens: .empty,
+        whiteKing: Bitboard.squareMask(.e1),
+        blackPawns: .empty,
+        blackKnights: Bitboard.squareMask(.e3),
+        blackBishops: .empty,
+        blackRooks: .empty,
+        blackQueens: .empty,
+        blackKing: .empty,
+        plyNumber: 1,
+        playerToMove: .white,
+        enpassantTargetSqauare: .empty,
+        castlingRights: [.K, .Q, .k, .q]
+    )
+    
+    #expect(state.generateAllLegalMoves().count(where: { $0.piece == .king }) == 3, "a knight is blocking castling, so 3 moves remain")
+    #expect(state.isKingInCheck() == false, "king is not in check")
+    
+    state = BoardState(
+        whitePawns: .empty,
+        whiteKnights: .empty,
+        whiteBishops: .empty,
+        whiteRooks: Bitboard.squareMask(.a1) | Bitboard.squareMask(.h1),
+        whiteQueens: .empty,
+        whiteKing: Bitboard.squareMask(.e1),
+        blackPawns: .empty,
+        blackKnights: Bitboard.squareMask(.c2),
+        blackBishops: .empty,
+        blackRooks: .empty,
+        blackQueens: .empty,
+        blackKing: .empty,
+        plyNumber: 1,
+        playerToMove: .white,
+        enpassantTargetSqauare: .empty,
+        castlingRights: [.K, .Q, .k, .q]
+    )
+    
+    #expect(state.generateAllLegalMoves().count(where: { $0.piece == .king }) == 5, "a knight is checking the king, so 5 moves remain")
+    #expect(state.generateAllLegalMoves().count == 5, "a knight is checking the king, so 5 moves remain")
+    #expect(state.isKingInCheck() == true, "king is in check")
+    
+    let shortState = BoardState(
+        whitePawns: .empty,
+        whiteKnights: .empty,
+        whiteBishops: .empty,
+        whiteRooks: Bitboard.squareMask(.a1) | Bitboard.squareMask(.h1),
+        whiteQueens: .empty,
+        whiteKing: Bitboard.squareMask(.e1),
+        blackPawns: .empty,
+        blackKnights: .empty,
+        blackBishops: .empty,
+        blackRooks: Bitboard.squareMask(.a8) | Bitboard.squareMask(.h8),
+        blackQueens: .empty,
+        blackKing: Bitboard.squareMask(.e8),
+        plyNumber: 1,
+        playerToMove: .white,
+        enpassantTargetSqauare: .empty,
+        castlingRights: [.K, .Q, .k, .q]
+    )
+    
+    let castleShort = shortState.isValidMove(piece: .king, from: .e1, to: .g1)
+    
+    #expect(castleShort != nil, "castling is valid in this position")
+    if let bsA = castleShort?.resultingBoardState {
+        #expect(bsA.whiteKing.hasPiece(on: .g1), "king is on g1")
+        #expect(bsA.whiteRooks.hasPiece(on: .a1), "one rook is on a1")
+        #expect(bsA.whiteRooks.hasPiece(on: .f1), "one rook is on f1")
+        #expect(!bsA.whiteRooks.hasPiece(on: .h1), "no rook is on h1")
+//        print(bsA.boardString())
+    }
+    
+    let longState = BoardState(
+        whitePawns: .empty,
+        whiteKnights: .empty,
+        whiteBishops: .empty,
+        whiteRooks: Bitboard.squareMask(.a1) | Bitboard.squareMask(.h1),
+        whiteQueens: .empty,
+        whiteKing: Bitboard.squareMask(.e1),
+        blackPawns: .empty,
+        blackKnights: .empty,
+        blackBishops: .empty,
+        blackRooks: Bitboard.squareMask(.a8) | Bitboard.squareMask(.h8),
+        blackQueens: .empty,
+        blackKing: Bitboard.squareMask(.e8),
+        plyNumber: 1,
+        playerToMove: .white,
+        enpassantTargetSqauare: .empty,
+        castlingRights: [.K, .Q, .k, .q]
+    )
+    
+    let castleLong = longState.isValidMove(piece: .king, from: .e1, to: .c1)
+    
+    #expect(castleLong != nil, "castling is valid in this position")
+    if let bsB = castleLong?.resultingBoardState {
+        #expect(bsB.whiteKing.hasPiece(on: .c1), "king is on c1")
+        #expect(bsB.whiteRooks.hasPiece(on: .h1), "one rook is on h1")
+        #expect(bsB.whiteRooks.hasPiece(on: .d1), "one rook is on d1")
+        #expect(!bsB.whiteRooks.hasPiece(on: .a1), "no rook is on a1")
+        print(bsB.boardString())
+    }
+}
+
 @Test func testKnightMoves() async throws {
     // 8  .  .  .  .  .  .  .  .
     // 7  .  .  .  .  .  .  .  .
