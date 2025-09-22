@@ -1007,82 +1007,68 @@ struct BoardState: Codable {
         
         if playerToCheck == .white { // see if black pieces attack white king
             let kingLocation = kingLocation ?? self.whiteKing
-            for move in self.generateBlackPawnMoves() {
-                if kingLocation & move.to > 0 {
-                    return true
-                }
+            guard kingLocation.nonzeroBitCount > 0 else { return false }
+            let idx = kingLocation.popLSB()!.0
+            let kingsq = Square(rawValue: idx)!
+            
+            if (kingLocation.neShift() | kingLocation.nwShift()) & self.blackPawns > 0 {
+                return true
             }
             
-            for move in self.generateBlackKnightMoves() {
-                if kingLocation & move.to > 0 {
-                    return true
-                }
+            if Square.generateKnightMoves(kingsq) & self.blackKnights > 0 {
+                return true
             }
             
-            for move in self.generateBlackBishopMoves() {
-                if kingLocation & move.to > 0 {
-                    return true
-                }
+            if Square.slidingBishopAttacks(at: kingsq, blockers: self.allPieces) & (self.blackBishops | self.blackQueens) > 0 {
+                return true
             }
             
-            for move in self.generateBlackRookMoves() {
-                if kingLocation & move.to > 0 {
-                    return true
-                }
-            }
-            
-            for move in self.generateBlackQueenMoves() {
-                if kingLocation & move.to > 0 {
-                    return true
-                }
+            if Square.slidingRookAttacks(at: kingsq, blockers: self.allPieces) & (self.blackRooks | self.blackQueens) > 0 {
+                return true
             }
             
             // It's weird but will be used to prevent this move from occurring
-            // TODO: This has the danger of infinite loops, so it should be reworked
-//            for move in self.generateBlackKingMoves() {
-//                if kingLocation & move.to > 0 {
-//                    return true
-//                }
-//            }
+            let kingmoves: Bitboard = (
+                kingLocation.nShift() | kingLocation.neShift() |
+                kingLocation.eShift() | kingLocation.seShift() |
+                kingLocation.sShift() | kingLocation.swShift() |
+                kingLocation.wShift() | kingLocation.nwShift()
+            )
+            if kingmoves & self.blackKing > 0 {
+                return true
+            }
         } else if playerToCheck == .black { // see if white pieces attack black king
             let kingLocation = kingLocation ?? self.blackKing
-            for move in self.generateWhitePawnMoves() {
-                if kingLocation & move.to > 0 {
-                    return true
-                }
+            guard kingLocation.nonzeroBitCount > 0 else { return false }
+            let idx = kingLocation.popLSB()!.0
+            let kingsq = Square(rawValue: idx)!
+            
+            if (kingLocation.neShift() | kingLocation.nwShift()) & self.whitePawns > 0 {
+                return true
             }
             
-            for move in self.generateWhiteKnightMoves() {
-                if kingLocation & move.to > 0 {
-                    return true
-                }
+            if Square.generateKnightMoves(kingsq) & self.whiteKnights > 0 {
+                return true
             }
             
-            for move in self.generateWhiteBishopMoves() {
-                if kingLocation & move.to > 0 {
-                    return true
-                }
+            if Square.slidingBishopAttacks(at: kingsq, blockers: self.allPieces) & (self.whiteBishops | self.whiteQueens) > 0 {
+                return true
             }
             
-            for move in self.generateWhiteRookMoves() {
-                if kingLocation & move.to > 0 {
-                    return true
-                }
-            }
-            
-            for move in self.generateWhiteQueenMoves() {
-                if kingLocation & move.to > 0 {
-                    return true
-                }
+            if Square.slidingRookAttacks(at: kingsq, blockers: self.allPieces) & (self.whiteRooks | self.whiteQueens) > 0 {
+                return true
             }
             
             // It's weird but will be used to prevent this move from occurring
-            // TODO: This has the danger of infinite loops, so it should be reworked
-//            for move in self.generateWhiteKingMoves() {
-//                if kingLocation & move.to > 0 {
-//                    return true
-//                }
-//            }
+            let kingmoves: Bitboard = (
+                kingLocation.nShift() | kingLocation.neShift() |
+                kingLocation.eShift() | kingLocation.seShift() |
+                kingLocation.sShift() | kingLocation.swShift() |
+                kingLocation.wShift() | kingLocation.nwShift()
+            )
+            if kingmoves & self.whiteKing > 0 {
+                return true
+            }
         }
         
         return false
