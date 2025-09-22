@@ -26,7 +26,7 @@ struct BoardState: Codable {
     // MARK: - Metadata
     let plyNumber: Int
     let playerToMove: PlayerColor
-    let enpassantTargetSqauare: Bitboard
+    let enpassantTargetSquare: Bitboard
     
     let castlingRights: [CastlingRights]
     
@@ -60,7 +60,7 @@ struct BoardState: Codable {
         self.blackKing = blackKing
         self.plyNumber = plyNumber
         self.playerToMove = playerToMove
-        self.enpassantTargetSqauare = enpassantTargetSqauare
+        self.enpassantTargetSquare = enpassantTargetSqauare
         self.castlingRights = castlingRights
     }
     
@@ -169,13 +169,13 @@ struct BoardState: Codable {
         idx += 1
         
         if tokens[idx].value == "-" {
-            self.enpassantTargetSqauare = .empty
+            self.enpassantTargetSquare = .empty
         } else {
             let rank: Int = Int(tokens[idx].value.unicodeScalars.first!.value - "a".unicodeScalars.first!.value)
             let file = Int(tokens[idx].value.unicodeScalars.last!.value - "1".unicodeScalars.first!.value)
             
             let sq = Square(rawValue: (rank * 8) + file)!
-            self.enpassantTargetSqauare = Bitboard.squareMask(sq)
+            self.enpassantTargetSquare = Bitboard.squareMask(sq)
         }
         idx += 1
         
@@ -600,7 +600,7 @@ struct BoardState: Codable {
 //                    blackKing: <#T##Bitboard#>,
 //                    plyNumber: self.plyNumber+1,
 //                    playerToMove: self.playerToMove.opposite(),
-//                    enpassantTargetSqauare: <#T##Bitboard#>,
+//                    enpassantTargetSquare: <#T##Bitboard#>,
 //                    isCheck: <#T##Bool#>,
 //                    castlingRights: self.castlingRights
 //                )

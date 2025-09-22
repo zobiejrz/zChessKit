@@ -22,7 +22,7 @@ extension BoardState: Equatable {
             lhs.blackKing == rhs.blackKing &&
             lhs.plyNumber == rhs.plyNumber &&
             lhs.playerToMove == rhs.playerToMove &&
-            lhs.enpassantTargetSqauare == rhs.enpassantTargetSqauare &&
+            lhs.enpassantTargetSquare == rhs.enpassantTargetSquare &&
             lhs.castlingRights == rhs.castlingRights
         )
     }
