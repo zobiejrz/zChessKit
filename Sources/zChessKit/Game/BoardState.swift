@@ -196,8 +196,45 @@ struct BoardState: Codable {
         // - Forward 2 (from rank 2)
         // - Captures (left/right)
         // - En passant
-        // TODO: Implement Pawn Moves
-        return []
+        var output: [(from: Bitboard,  to: Bitboard)] = []
+        var remainingPawns = self.whitePawns
+        
+        while remainingPawns.nonzeroBitCount > 0 {
+            guard let tmp = remainingPawns.popLSB() else { break }
+            guard let originSquare = Square(rawValue: tmp.0) else { break }
+            remainingPawns = tmp.1
+            let origin: Bitboard = Bitboard.squareMask(originSquare)
+            
+            var total = Bitboard.empty
+            
+            // Forward 1
+            if origin.nShift() & self.allPieces == .empty {
+                total |= origin.nShift()
+            }
+            
+            // Forward 2
+            if origin & Bitboard.rank2 > 0 {
+                if origin.nShift() & self.allPieces == .empty && origin.nShift().nShift() & self.allPieces == .empty {
+                    total |= origin.nShift().nShift()
+                }
+            }
+            
+            // Captures
+            total |= (origin.neShift() & self.blackPieces)
+            total |= (origin.nwShift() & self.blackPieces)
+
+            // En passant
+            total |= (origin.neShift() & self.enpassantTargetSquare)
+            total |= (origin.nwShift() & self.enpassantTargetSquare)
+            
+            while total != Bitboard.empty {
+                guard let curr = total.popLSB() else { break }
+                total = curr.1
+                output.append((origin, Bitboard.squareMask(Square(rawValue: curr.0)!)))
+            }
+        }
+
+        return output
     }
     
     private func generateBlackPawnMoves() -> [(from: Bitboard,  to: Bitboard)] {
@@ -205,8 +242,45 @@ struct BoardState: Codable {
         // - Forward 2 (from rank 7)
         // - Captures (left/right)
         // - En passant
-        // TODO: Implement Pawn Moves
-        return []
+        var output: [(from: Bitboard,  to: Bitboard)] = []
+        var remainingPawns = self.blackPawns
+        
+        while remainingPawns.nonzeroBitCount > 0 {
+            guard let tmp = remainingPawns.popLSB() else { break }
+            guard let originSquare = Square(rawValue: tmp.0) else { break }
+            remainingPawns = tmp.1
+            let origin: Bitboard = Bitboard.squareMask(originSquare)
+            
+            var total = Bitboard.empty
+            
+            // Forward 1
+            if origin.sShift() & self.allPieces == .empty {
+                total |= origin.sShift()
+            }
+            
+            // Forward 2
+            if origin & Bitboard.rank7 > 0 {
+                if origin.sShift() & self.allPieces == .empty && origin.sShift().sShift() & self.allPieces == .empty {
+                    total |= origin.sShift().sShift()
+                }
+            }
+            
+            // Captures
+            total |= (origin.seShift() & self.whitePieces)
+            total |= (origin.swShift() & self.whitePieces)
+            
+            // En passant
+            total |= (origin.seShift() & self.enpassantTargetSquare)
+            total |= (origin.swShift() & self.enpassantTargetSquare)
+
+            while total != Bitboard.empty {
+                guard let curr = total.popLSB() else { break }
+                total = curr.1
+                output.append((origin, Bitboard.squareMask(Square(rawValue: curr.0)!)))
+            }
+        }
+        
+        return output
     }
     
     private func generateWhiteKnightMoves() -> [(from: Bitboard,  to: Bitboard)] {
@@ -573,50 +647,105 @@ struct BoardState: Codable {
         let kingMoves = playerToGenerate == .white ? self.generateWhiteKingMoves() : self.generateBlackKingMoves()
 
         // 2. Combine all possible pseudo-legal moves into Move Objects
-        // TODO: Implement pawn moves
-//        for pawnMove in pawnMoves {
-//            let originSquare = Square(rawValue: pawnMove.from.popLSB()!.0)!
-//            let destSquare = Square(rawValue: pawnMove.to.popLSB()!.0)!
-//            let capturedPiece: PieceType? = self.whatPieceIsOn(destSquare)
-//            
-//            let possiblePromotions: [PieceType?] = (
-//                Bitboard.squareMask(destSquare) & (Bitboard.rank1 | Bitboard.rank8) > 0 ?
-//                [.knight, .bishop, .rook, .queen] : [nil]
-//            )
-//            
-//            for promotion in possiblePromotions {
-//                let resultingBoardState = BoardState(
-//                    whitePawns: <#T##Bitboard#>,
-//                    whiteKnights: <#T##Bitboard#>,
-//                    whiteBishops: <#T##Bitboard#>,
-//                    whiteRooks: <#T##Bitboard#>,
-//                    whiteQueens: <#T##Bitboard#>,
-//                    whiteKing: <#T##Bitboard#>,
-//                    blackPawns: <#T##Bitboard#>,
-//                    blackKnights: <#T##Bitboard#>,
-//                    blackBishops: <#T##Bitboard#>,
-//                    blackRooks: <#T##Bitboard#>,
-//                    blackQueens: <#T##Bitboard#>,
-//                    blackKing: <#T##Bitboard#>,
-//                    plyNumber: self.plyNumber+1,
-//                    playerToMove: self.playerToMove.opposite(),
-//                    enpassantTargetSquare: <#T##Bitboard#>,
-//                    isCheck: <#T##Bool#>,
-//                    castlingRights: self.castlingRights
-//                )
-//                
-//                let move = Move(
-//                    from: originSquare,
-//                    to: destSquare,
-//                    piece: .pawn,
-//                    capturedPiece: capturedPiece,
-//                    promotion: promotion,
-//                    resultingBoardState: resultingBoardState,
-//                    ply: self.plyNumber+1,
-//                    color: self.playerToMove.opposite()
-//                )
-//            }
-//        }
+        for move in pawnMoves {
+            let originSquare = Square(rawValue: move.from.popLSB()!.0)!
+            let originbb = Bitboard.squareMask(originSquare)
+            let destSquare = Square(rawValue: move.to.popLSB()!.0)!
+            let destbb = Bitboard.squareMask(destSquare)
+            
+            var whitePawns = self.whitePawns
+            var blackPawns = self.blackPawns
+            
+            let possiblePromotions: [PieceType?] = (
+                Bitboard.squareMask(destSquare) & (Bitboard.rank1 | Bitboard.rank8) > 0 ?
+                [.knight, .bishop, .rook, .queen] : [nil]
+            )
+            
+            let capturedPiece: PieceType?
+            if self.playerToMove == .white {
+                if destbb == self.enpassantTargetSquare {
+                    blackPawns &= ~(destbb.sShift())
+                    capturedPiece = .pawn
+                } else {
+                    blackPawns &= ~destbb
+                    capturedPiece = self.whatPieceIsOn(destSquare)
+                }
+                whitePawns = (whitePawns & ~originbb) | destbb
+            } else {
+                if destbb == self.enpassantTargetSquare {
+                    whitePawns &= ~(destbb.nShift())
+                    capturedPiece = .pawn
+                } else {
+                    whitePawns &= ~destbb
+                    capturedPiece = self.whatPieceIsOn(destSquare)
+                }
+                blackPawns = (whitePawns & ~originbb) | destbb
+            }
+            
+            let newEPTargetSquare: Bitboard
+            if self.playerToMove == .white && originbb.nShift().nShift() == destbb {
+                newEPTargetSquare = originbb.nShift()
+            } else if self.playerToMove == .black && originbb.sShift().sShift() == destbb {
+                newEPTargetSquare = originbb.sShift()
+            } else {
+                newEPTargetSquare = .empty
+            }
+                        
+            for promotion in possiblePromotions {
+                let resultingBoardState: BoardState
+                if self.playerToMove == .white {
+                    resultingBoardState = BoardState(
+                        whitePawns: whitePawns,
+                        whiteKnights: self.whiteKnights,
+                        whiteBishops: self.whiteBishops,
+                        whiteRooks: self.whiteRooks,
+                        whiteQueens: self.whiteQueens,
+                        whiteKing: self.whiteKing,
+                        blackPawns: blackPawns,
+                        blackKnights: self.blackKnights & ~destbb,
+                        blackBishops: self.blackBishops & ~destbb,
+                        blackRooks: self.blackRooks & ~destbb,
+                        blackQueens: self.blackQueens & ~destbb,
+                        blackKing: self.blackKing & ~destbb,
+                        plyNumber: self.plyNumber+1,
+                        playerToMove: self.playerToMove.opposite(),
+                        enpassantTargetSqauare: newEPTargetSquare,
+                        castlingRights: self.castlingRights
+                    )
+                } else {
+                    resultingBoardState = BoardState(
+                        whitePawns: whitePawns,
+                        whiteKnights: self.whiteKnights & ~destbb,
+                        whiteBishops: self.whiteBishops & ~destbb,
+                        whiteRooks: self.whiteRooks & ~destbb,
+                        whiteQueens: self.whiteQueens & ~destbb,
+                        whiteKing: self.whiteKing & ~destbb,
+                        blackPawns: blackPawns,
+                        blackKnights: self.blackKnights,
+                        blackBishops: self.blackBishops,
+                        blackRooks: self.blackRooks,
+                        blackQueens: self.blackQueens,
+                        blackKing: self.blackKing,
+                        plyNumber: self.plyNumber+1,
+                        playerToMove: self.playerToMove.opposite(),
+                        enpassantTargetSqauare: newEPTargetSquare,
+                        castlingRights: self.castlingRights
+                    )
+                }
+                
+                let move = Move(
+                    from: originSquare,
+                    to: destSquare,
+                    piece: .pawn,
+                    capturedPiece: capturedPiece,
+                    promotion: promotion,
+                    resultingBoardState: resultingBoardState,
+                    ply: self.plyNumber+1,
+                    color: self.playerToMove.opposite()
+                )
+                output.append(move)
+            }
+        }
         
         for move in knightMoves {
             let originSquare = Square(rawValue: move.from.popLSB()!.0)!

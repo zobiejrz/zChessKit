@@ -4,7 +4,7 @@ import zBitboard
 
 @Test func example() async throws {
     // Write your test here and use APIs like `#expect(...)` to check expected conditions.
-    var state = BoardState.testingPosition()
+    let state = BoardState.startingPosition()
     
     
     print(state.boardString())
@@ -17,7 +17,6 @@ import zBitboard
 //    for move in state.generateAllLegalMoves(.black) {
 //        print("\t\(move.piece) \(move.from) to \(move.to)")
 //    }
-
 }
 
 @Test func testBoardStateInitializer() async throws {
