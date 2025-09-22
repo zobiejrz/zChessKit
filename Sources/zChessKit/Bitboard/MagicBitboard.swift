@@ -37,12 +37,10 @@ struct MagicBitboard {
         // Enumerate all subsets of mask
         var subset = self.mask
         while true {
-            let idx: Int
-            
             let hashed = (subset &* self.magic) >> UInt64(self.shift)
-            idx = Int(hashed)
+            let idx = Int(hashed)
             
-            table[idx] = slidingAttacks(square, subset)
+            table[idx] = slidingAttacks(square, subset & self.mask)
             
             if subset == 0 { break }
             subset = (subset - 1) & self.mask
