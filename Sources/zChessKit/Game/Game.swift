@@ -26,13 +26,16 @@ class Game {
         self.initialBoardState = initialBoardState
     }
     
-    func makeMove(piece: PieceType, from origin: Square, to dest: Square, promotion: PieceType? = nil) {
-        // TODO: Placeholder
-        // need to validate the move first, then it just gets added to the end of the list of moves.
+    @discardableResult
+    func makeMove(piece: PieceType, from origin: Square, to dest: Square, promotion: PieceType? = nil) -> Bool {
         
+        // validate the move against the current boardstate
+        // add it to the move list if it is valid
         if let resultingMove = self.currentState.isValidMove(piece: piece, from: origin, to: dest, promotion: promotion) {
             self.moves.append(resultingMove)
+            return true
         }
+        return false
     }
     
     func setGamedata(for key: String, value: String) {
