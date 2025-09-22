@@ -337,7 +337,7 @@ import zBitboard
         castlingRights: [.K, .Q, .k, .q]
     )
         
-    #expect(state.generateAllLegalMoves().count == 0, "there are pawns on all light squares, preventing movement")
+    #expect(state.generateAllLegalMoves().count(where: { $0.piece == .knight }) == 0, "there are pawns on all light squares, preventing knight movement")
     #expect(state.isValidMove(piece: .knight, from: .d4, to: .c6) == nil, "c6 is occupied")
     #expect(state.isValidMove(piece: .knight, from: .d4, to: .e6) == nil, "e6 is occupied")
     #expect(state.isValidMove(piece: .knight, from: .d4, to: .b5) == nil, "b5 is occupied")
@@ -407,7 +407,7 @@ import zBitboard
         castlingRights: [.K, .Q, .k, .q]
     )
     
-    #expect(state.generateAllLegalMoves().count == 0, "there are pawns on all light squares, preventing movement")
+    #expect(state.generateAllLegalMoves().count(where: { $0.piece == .knight }) == 0, "there are pawns on all light squares, preventing knight movement")
     #expect(state.isValidMove(piece: .knight, from: .a1, to: .b3) == nil, "b3 is occupied")
     #expect(state.isValidMove(piece: .knight, from: .a1, to: .c2) == nil, "c2 is occupied")
 
