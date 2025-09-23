@@ -9,6 +9,8 @@ class Lexer {
     private let automata: [Automata] = [
         StringAutomaton(),
         IntegerAutomaton(),
+        SingleCharacterAutomaton(char: ",", type: .COMMA),
+        SingleCharacterAutomaton(char: ";", type: .SEMICOLON),
         SingleCharacterAutomaton(char: ".", type: .PERIOD),
         SingleCharacterAutomaton(char: "*", type: .ASTERISK),
         SingleCharacterAutomaton(char: "[", type: .L_BRACKET),
