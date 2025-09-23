@@ -1267,6 +1267,7 @@ public struct BoardState: Codable {
         let from: Square?
         let to: Square
         let promotion: PieceType?
+        let disambiguationBB: Bitboard
         
         // 1. Strip check / checkmate symbols
         san = san.replacingOccurrences(of: "+", with: "")
@@ -1278,11 +1279,13 @@ public struct BoardState: Codable {
             from = self.playerToMove == .white ? .e1 : .e8
             to = self.playerToMove == .white ? .g1 : .g8
             promotion = nil
+            disambiguationBB = .empty
         } else if san == "O-O-O" || san == "0-0-0" {
             piece = .king
             from = self.playerToMove == .white ? .e1 : .e8
             to = self.playerToMove == .white ? .c1 : .c8
             promotion = nil
+            disambiguationBB = .empty
         } else {
             
             // 3. Extract promotion piece if present (like e8=Q)
@@ -1312,39 +1315,31 @@ public struct BoardState: Codable {
             // 6. Disambiguation (anything left in sanBody before the dest, after removing 'x')
             var disambiguation = String(sanBody.dropLast(2))
             disambiguation = disambiguation.replacingOccurrences(of: "x", with: "")
-            
+                        
             if disambiguation.count == 2 {
                 guard let origin = Square.stringToSquare(disambiguation) else { return nil }
                 from = origin
+                disambiguationBB = .empty // have all the info already
             } else if disambiguation.count == 1 {
                 if disambiguation.first!.isNumber {
                     guard let rank = Int(disambiguation) else { return nil }
                     guard let bb = Bitboard.rank(rank) else { return nil }
                     
-                    let target = self.getBitboard(for: piece, player: self.playerToMove) & bb
-                    guard target.nonzeroBitCount == 1 else { return nil }
-                    
-                    guard let (idx, _) = target.popLSB() else { return nil }
-                    guard let sq = Square(rawValue: idx) else { return nil }
-                    
-                    from = sq
+                    disambiguationBB = bb
+                    from = nil
                 } else if disambiguation.first!.isLetter {
                     let all = "abcdefgh"
                     guard let indexInStr = all.firstIndex(of: disambiguation.first!) else { return nil }
                     let file = all.distance(from: all.startIndex, to: indexInStr) + 1
                     guard let bb = Bitboard.file(Int(file)) else { return nil }
                     
-                    let target = self.getBitboard(for: piece, player: self.playerToMove) & bb
-                    guard target.nonzeroBitCount == 1 else { return nil }
-                    
-                    guard let (idx, _) = target.popLSB() else { return nil }
-                    guard let sq = Square(rawValue: idx) else { return nil }
-                    
-                    from = sq
+                    disambiguationBB = bb
+                    from = nil
                 } else {
                     return nil
                 }
             } else if disambiguation.count == 0 {
+                disambiguationBB = .empty
                 from = nil
             } else {
                 return nil
@@ -1368,6 +1363,12 @@ public struct BoardState: Codable {
             
             if let sq = from {
                 if move.from != sq {
+                    return false
+                }
+            }
+            
+            if disambiguationBB != .empty {
+                if Bitboard.squareMask(move.from) & disambiguationBB == 0 {
                     return false
                 }
             }
