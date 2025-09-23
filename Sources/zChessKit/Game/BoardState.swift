@@ -7,7 +7,7 @@
 
 import zBitboard
 
-struct BoardState: Codable {
+public struct BoardState: Codable {
     // MARK: - Immutable Bitboards
     let whitePawns: Bitboard
     let whiteKnights: Bitboard
@@ -24,8 +24,8 @@ struct BoardState: Codable {
     let blackKing: Bitboard
     
     // MARK: - Metadata
-    let plyNumber: Int
-    let playerToMove: PlayerColor
+    public let plyNumber: Int
+    public let playerToMove: PlayerColor
     let enpassantTargetSquare: Bitboard
     
     let castlingRights: [CastlingRights]
@@ -45,7 +45,7 @@ struct BoardState: Codable {
     
     //MARK: - Init functions
     
-    init(whitePawns: Bitboard, whiteKnights: Bitboard, whiteBishops: Bitboard, whiteRooks: Bitboard, whiteQueens: Bitboard, whiteKing: Bitboard, blackPawns: Bitboard, blackKnights: Bitboard, blackBishops: Bitboard, blackRooks: Bitboard, blackQueens: Bitboard, blackKing: Bitboard, plyNumber: Int, playerToMove: PlayerColor, enpassantTargetSqauare: Bitboard, castlingRights: [CastlingRights]) {
+    public init(whitePawns: Bitboard, whiteKnights: Bitboard, whiteBishops: Bitboard, whiteRooks: Bitboard, whiteQueens: Bitboard, whiteKing: Bitboard, blackPawns: Bitboard, blackKnights: Bitboard, blackBishops: Bitboard, blackRooks: Bitboard, blackQueens: Bitboard, blackKing: Bitboard, plyNumber: Int, playerToMove: PlayerColor, enpassantTargetSqauare: Bitboard, castlingRights: [CastlingRights]) {
         self.whitePawns = whitePawns
         self.whiteKnights = whiteKnights
         self.whiteBishops = whiteBishops
@@ -64,7 +64,7 @@ struct BoardState: Codable {
         self.castlingRights = castlingRights
     }
     
-    init(FEN: String) {
+    public init(FEN: String) {
         var whitePawns: Bitboard = .empty
         var whiteKnights: Bitboard = .empty
         var whiteBishops: Bitboard = .empty
@@ -1222,7 +1222,7 @@ struct BoardState: Codable {
     
     // MARK: - Pretty String
     
-    func boardString() -> String {
+    public func boardString() -> String {
         // mapping from square -> piece symbol
         var board = Array(repeating: ".", count: 64)
         
@@ -1268,7 +1268,7 @@ struct BoardState: Codable {
         
     // MARK: - Static Constructors
     
-    static func startingPosition() -> BoardState {
+    public static func startingPosition() -> BoardState {
         BoardState(
             whitePawns: 0x000000000000FF00,
             whiteKnights: 0x0000000000000042,
@@ -1289,7 +1289,7 @@ struct BoardState: Codable {
         )
     }
     
-    static func testingPosition() -> BoardState {
+    public static func testingPosition() -> BoardState {
         BoardState(
             whitePawns: Bitboard.empty,
             whiteKnights: 0x0000000000000042,

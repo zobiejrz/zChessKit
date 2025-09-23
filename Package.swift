@@ -10,6 +10,7 @@ let package = Package(
         .library(
             name: "zChessKit",
             targets: ["zChessKit"]),
+        .executable(name: "zChessKit-cli", targets: ["zChessKit-cli"]),
     ],
     dependencies: [
         .package(url: "https://github.com/zobiejrz/zBitboard", from: "0.2.0"),
@@ -20,6 +21,10 @@ let package = Package(
         .target(
             name: "zChessKit",
             dependencies: ["zBitboard"]
+        ),
+        .executableTarget(
+            name: "zChessKit-cli",
+            dependencies: ["zChessKit", "zBitboard"]
         ),
         .testTarget(
             name: "zChessKitTests",

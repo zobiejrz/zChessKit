@@ -7,16 +7,16 @@
 
 import zBitboard
 
-class Game {
-    private(set) var gamedata: [ String : String ]
-    private(set) var moves: [Move]
-    let initialBoardState: BoardState
+public class Game {
+    public private(set) var gamedata: [ String : String ]
+    public private(set) var moves: [Move]
+    public let initialBoardState: BoardState
     
-    var currentState: BoardState {
+    public var currentState: BoardState {
         return moves.last?.resultingBoardState ?? initialBoardState
     }
     
-    init(
+    public init(
         gamedata: [String: String] = [:],
         moves: [Move] = [],
         initialBoardState: BoardState = BoardState.startingPosition(),
@@ -27,7 +27,7 @@ class Game {
     }
     
     @discardableResult
-    func makeMove(piece: PieceType, from origin: Square, to dest: Square, promotion: PieceType? = nil) -> Bool {
+    public func makeMove(piece: PieceType, from origin: Square, to dest: Square, promotion: PieceType? = nil) -> Bool {
         
         // validate the move against the current boardstate
         // add it to the move list if it is valid
@@ -38,15 +38,27 @@ class Game {
         return false
     }
     
-    func setGamedata(for key: String, value: String) {
+    public func setGamedata(for key: String, value: String) {
         self.gamedata[key] = value
     }
     
-    func getPGN() -> String {
+    public func getPGN() -> String {
         // TODO: Placeholder
         // Format game data
         // Format move text
         // return string
         return ""
+    }
+    
+    public func getGameResult() -> GameResult {
+        if self.currentState.generateAllLegalMoves().isEmpty {
+            if self.currentState.isKingInCheck() {
+                return .checkmate
+            } else {
+                return .draw
+            }
+        }
+
+        return .ongoing
     }
 }

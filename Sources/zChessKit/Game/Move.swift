@@ -8,7 +8,7 @@
 import Foundation
 import zBitboard
 
-struct Move {
+public struct Move {
     // MARK: - Core Move Data
     let from: Square
     let to: Square
@@ -73,7 +73,7 @@ struct Move {
 }
 
 extension Move: Equatable {
-    static func == (lhs: Move, rhs: Move) -> Bool {
+    public static func == (lhs: Move, rhs: Move) -> Bool {
         return (
             lhs.from == rhs.from &&
             lhs.to == rhs.to &&

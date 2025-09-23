@@ -6,7 +6,7 @@
 //
 
 extension BoardState: Equatable {
-    static func == (lhs: BoardState, rhs: BoardState) -> Bool {
+    public static func == (lhs: BoardState, rhs: BoardState) -> Bool {
         return (
             lhs.whitePawns == rhs.whitePawns &&
             lhs.whiteKnights == rhs.whiteKnights &&
