@@ -679,7 +679,7 @@ public struct BoardState: Codable {
                     whitePawns &= ~destbb
                     capturedPiece = self.whatPieceIsOn(destSquare)
                 }
-                blackPawns = (whitePawns & ~originbb) | destbb
+                blackPawns = (blackPawns & ~originbb) | destbb
             }
             
             let newEPTargetSquare: Bitboard
