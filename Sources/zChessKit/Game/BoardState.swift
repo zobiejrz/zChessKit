@@ -657,7 +657,7 @@ public struct BoardState: Codable {
             var blackPawns = self.blackPawns
             
             let possiblePromotions: [PieceType?] = (
-                Bitboard.squareMask(destSquare) & (Bitboard.rank1 | Bitboard.rank8) > 0 ?
+                destbb & (Bitboard.rank1 | Bitboard.rank8) > 0 ?
                 [.knight, .bishop, .rook, .queen] : [nil]
             )
             
@@ -671,7 +671,7 @@ public struct BoardState: Codable {
                     capturedPiece = self.whatPieceIsOn(destSquare)
                 }
                 whitePawns = (whitePawns & ~originbb) | destbb
-            } else {
+            } else { // self.playerToMove == .black
                 if destbb == self.enpassantTargetSquare {
                     whitePawns &= ~(destbb.nShift())
                     capturedPiece = .pawn
@@ -1177,7 +1177,7 @@ public struct BoardState: Codable {
             let idx = kingLocation.popLSB()!.0
             let kingsq = Square(rawValue: idx)!
             
-            if (kingLocation.neShift() | kingLocation.nwShift()) & self.whitePawns > 0 {
+            if (kingLocation.seShift() | kingLocation.swShift()) & self.whitePawns > 0 {
                 return true
             }
             
