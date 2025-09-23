@@ -43,55 +43,70 @@ struct zChessKitCLI {
             // piece square square [promotion piece]
             let move = readLine()
             
-            let moveArr = move!.components(separatedBy: " ")
-            guard moveArr.count >= 3 else {
-                print("\tformat is '<piece> <square> <square> [promotion piece]'")
-                continue
-            }
-            
-            guard let piece = PieceType.fromString(moveArr[0]) else {
-                print("\tpieces should be the single letter or the full name of the piece (i.e. 'n' for 'knight')")
-                continue
-            }
-            
-            guard let originSquare = stringToSquare(moveArr[1]) else {
-                print("\tsquares should be the two character algebraic notation for a chess square (i.e. 'e4' or 'a1')")
-                continue
-            }
-            
-            guard let destSquare = stringToSquare(moveArr[2]) else {
-                print("\tsquares should be the two character algebraic notation for a chess square (i.e. 'e4' or 'a1')")
-                continue
-            }
-            
-            let promotionPiece: PieceType?
-            if moveArr.count > 3 {
-                promotionPiece = PieceType.fromString(moveArr[3])
-                guard promotionPiece != nil else {
+            if move == "moves" {
+                let moves = game.currentState.generateAllLegalMoves()
+                print("There are \(moves.count) moves available")
+                for move in moves {
+                    if move.promotion != nil {
+                        print("\t\(move.piece) from \(move.from) to \(move.to) = \(move.promotion!)")
+                    } else {
+                        print("\t\(move.piece) from \(move.from) to \(move.to)")
+                    }
+                }
+                
+            } else {
+                
+                let moveArr = move!.components(separatedBy: " ")
+                guard moveArr.count >= 3 else {
+                    print("\tformat is '<piece> <square> <square> [promotion piece]'")
+                    continue
+                }
+                
+                guard let piece = PieceType.fromString(moveArr[0]) else {
                     print("\tpieces should be the single letter or the full name of the piece (i.e. 'n' for 'knight')")
                     continue
                 }
                 
-                guard [.queen, .rook, .bishop, .knight].contains(promotionPiece) else {
-                    print("\tpromotion pieces should be one of 'queen', 'rook', 'bishop', or 'knight'")
+                guard let originSquare = stringToSquare(moveArr[1]) else {
+                    print("\tsquares should be the two character algebraic notation for a chess square (i.e. 'e4' or 'a1')")
                     continue
                 }
-            } else {
-                promotionPiece = nil
-            }
-            
-            if game.makeMove(piece: piece, from: originSquare, to: destSquare, promotion: promotionPiece) {
-                if promotionPiece != nil {
-                    print("\tmoved \(piece) from \(originSquare) to \(destSquare) = \(promotionPiece!)")
-                } else {
-                    print("\tmoved \(piece) from \(originSquare) to \(destSquare)")
+                
+                guard let destSquare = stringToSquare(moveArr[2]) else {
+                    print("\tsquares should be the two character algebraic notation for a chess square (i.e. 'e4' or 'a1')")
+                    continue
                 }
-            } else {
-                print("\tmove invalid")
+                
+                let promotionPiece: PieceType?
+                if moveArr.count > 3 {
+                    promotionPiece = PieceType.fromString(moveArr[3])
+                    guard promotionPiece != nil else {
+                        print("\tpieces should be the single letter or the full name of the piece (i.e. 'n' for 'knight')")
+                        continue
+                    }
+                    
+                    guard [.queen, .rook, .bishop, .knight].contains(promotionPiece) else {
+                        print("\tpromotion pieces should be one of 'queen', 'rook', 'bishop', or 'knight'")
+                        continue
+                    }
+                } else {
+                    promotionPiece = nil
+                }
+                
+                if game.makeMove(piece: piece, from: originSquare, to: destSquare, promotion: promotionPiece) {
+                    if promotionPiece != nil {
+                        print("\tmoved \(piece) from \(originSquare) to \(destSquare) = \(promotionPiece!)")
+                    } else {
+                        print("\tmoved \(piece) from \(originSquare) to \(destSquare)")
+                    }
+                } else {
+                    print("\tmove invalid")
+                }
             }
         }
         
         print("\nGame finished - \(game.getGameResult())")
+        print(game.currentState.boardString())
         return
     }
 }

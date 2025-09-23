@@ -10,40 +10,40 @@ import zBitboard
 
 public struct Move {
     // MARK: - Core Move Data
-    let from: Square
-    let to: Square
-    let piece: PieceType
-    let capturedPiece: PieceType?
-    let promotion: PieceType?
+    public let from: Square
+    public let to: Square
+    public let piece: PieceType
+    public let capturedPiece: PieceType?
+    public let promotion: PieceType?
     
     // MARK: - Game State
-    let resultingBoardState: BoardState
-    let ply: Int
-    let color: PlayerColor
-    let isCastling: Bool
+    public let resultingBoardState: BoardState
+    public let ply: Int
+    public let color: PlayerColor
+    public let isCastling: Bool
     
     // MARK: - Annotations
-    var annotation: String?      // e.g. "!!", "?", "good move", "dubious"
-    var nags: [Int]              // Numeric Annotation Glyphs (e.g. 1 = "!", 2 = "?")
+    public var annotation: String?      // e.g. "!!", "?", "good move", "dubious"
+    public var nags: [Int]              // Numeric Annotation Glyphs (e.g. 1 = "!", 2 = "?")
     
     // MARK: - Tree Structure
-    var variations: [Move]       // Represents alternative lines from this position
+    public var variations: [Move]       // Represents alternative lines from this position
     
     // MARK: - Computed Notation (Not stored)
-    var san: String {
+    public var san: String {
         // Compute Standard Algebraic Notation (e.g. "e4", "Nxf6", "O-O")
         // Requires access to board state before this move
         return "" // TODO: Placeholder
     }
     
-    var uci: String {
+    public var uci: String {
         // Compute Universal Chess Interface format (e.g. "e2e4", "e7e8q")
         // Format: from square + to square + promotion (if any)
         return "" // TODO: Placeholder
     }
     
     // MARK: - Init
-    init(
+    public init(
         from: Square,
         to: Square,
         piece: PieceType,
