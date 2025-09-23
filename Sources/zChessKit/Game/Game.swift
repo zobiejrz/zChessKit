@@ -38,8 +38,33 @@ public class Game {
         return false
     }
     
+    @discardableResult
+    public func makeSANMove(_ san: String) -> Bool {
+        // validate the move against the current boardstate
+        // add it to the move list if it is valid
+        
+        if let resultingMove = self.currentState.isValidSANMove(san) {
+            self.moves.append(resultingMove)
+            return true
+        }
+        
+        return false
+    }
+    
     public func setGamedata(for key: String, value: String) {
         self.gamedata[key] = value
+    }
+    
+    public func setMoveAnnotation(to idx: Int, value: String) {
+        self.moves[idx].annotation = value
+    }
+    
+    public func appendMoveNAG(to idx: Int, value: Int) {
+        self.moves[idx].nags.append(value)
+    }
+    
+    public func removeMoveNAG(from idx: Int, indexInNAG: Int) {
+        self.moves[idx].nags.remove(at: indexInNAG)
     }
     
     public func getPGN() -> String {
