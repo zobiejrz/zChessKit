@@ -1208,40 +1208,6 @@ public struct BoardState: Codable {
         return false
     }
     
-    func getBitboard(for piece: PieceType, player: PlayerColor) -> Bitboard {
-        if player == .white {
-            switch piece {
-            case .pawn:
-                return self.whitePawns
-            case .knight:
-                return self.whiteKnights
-            case .bishop:
-                return self.whiteBishops
-            case .rook:
-                return self.whiteRooks
-            case .queen:
-                return self.whiteQueens
-            case .king:
-                return self.whiteKing
-            }
-        } else {
-            switch piece {
-            case .pawn:
-                return self.blackPawns
-            case .knight:
-                return self.blackKnights
-            case .bishop:
-                return self.blackBishops
-            case .rook:
-                return self.blackRooks
-            case .queen:
-                return self.blackQueens
-            case .king:
-                return self.blackKing
-            }
-        }
-    }
-    
     // MARK: - SingleMoveGenerator
     
     func isValidMove(piece: PieceType, from origin: Square, to dest: Square, promotion: PieceType? = nil) -> Move? {
@@ -1437,27 +1403,6 @@ public struct BoardState: Codable {
             whiteQueens: 0x0000000000000008,
             whiteKing: 0x0000000000000010,
             blackPawns: 0x00FF000000000000,
-            blackKnights: 0x4200000000000000,
-            blackBishops: 0x2400000000000000,
-            blackRooks: 0x8100000000000000,
-            blackQueens: 0x0800000000000000,
-            blackKing: 0x1000000000000000,
-            plyNumber: 0,
-            playerToMove: .white,
-            enpassantTargetSqauare: Bitboard.empty,
-            castlingRights: [.K, .Q, .k, .q]
-        )
-    }
-    
-    public static func testingPosition() -> BoardState {
-        BoardState(
-            whitePawns: Bitboard.empty,
-            whiteKnights: 0x0000000000000042,
-            whiteBishops: 0x0000000000000024,
-            whiteRooks: 0x0000000000000081,
-            whiteQueens: 0x0000000000000008,
-            whiteKing: 0x0000000000000010,
-            blackPawns: Bitboard.empty,
             blackKnights: 0x4200000000000000,
             blackBishops: 0x2400000000000000,
             blackRooks: 0x8100000000000000,
