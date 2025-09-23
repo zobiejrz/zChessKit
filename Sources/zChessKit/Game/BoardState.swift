@@ -1332,7 +1332,7 @@ public struct BoardState: Codable {
                     let all = "abcdefgh"
                     guard let indexInStr = all.firstIndex(of: disambiguation.first!) else { return nil }
                     let file = all.distance(from: all.startIndex, to: indexInStr) + 1
-                    guard let bb = Bitboard.file(Int(file) + 1) else { return nil }
+                    guard let bb = Bitboard.file(Int(file)) else { return nil }
                     
                     let target = self.getBitboard(for: piece, player: self.playerToMove) & bb
                     guard target.nonzeroBitCount == 1 else { return nil }
