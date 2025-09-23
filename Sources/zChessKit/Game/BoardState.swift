@@ -608,7 +608,7 @@ public struct BoardState: Codable {
         return output
     }
     
-    private func whatPieceIsOn(_ square: Square) -> PieceType? {
+    public func whatPieceIsOn(_ square: Square) -> PieceType? {
         if (self.blackPawns | self.whitePawns).hasPiece(on: square) {
             return .pawn
         }
