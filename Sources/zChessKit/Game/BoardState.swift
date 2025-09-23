@@ -9,37 +9,37 @@ import zBitboard
 
 public struct BoardState: Codable {
     // MARK: - Immutable Bitboards
-    let whitePawns: Bitboard
-    let whiteKnights: Bitboard
-    let whiteBishops: Bitboard
-    let whiteRooks: Bitboard
-    let whiteQueens: Bitboard
-    let whiteKing: Bitboard
+    public let whitePawns: Bitboard
+    public let whiteKnights: Bitboard
+    public let whiteBishops: Bitboard
+    public let whiteRooks: Bitboard
+    public let whiteQueens: Bitboard
+    public let whiteKing: Bitboard
     
-    let blackPawns: Bitboard
-    let blackKnights: Bitboard
-    let blackBishops: Bitboard
-    let blackRooks: Bitboard
-    let blackQueens: Bitboard
-    let blackKing: Bitboard
+    public let blackPawns: Bitboard
+    public let blackKnights: Bitboard
+    public let blackBishops: Bitboard
+    public let blackRooks: Bitboard
+    public let blackQueens: Bitboard
+    public let blackKing: Bitboard
     
     // MARK: - Metadata
     public let plyNumber: Int
     public let playerToMove: PlayerColor
-    let enpassantTargetSquare: Bitboard
+    public let enpassantTargetSquare: Bitboard
     
-    let castlingRights: [CastlingRights]
+    public let castlingRights: [CastlingRights]
     
     // MARK: - Derived Bitboards
-    var whitePieces: Bitboard {
+    public var whitePieces: Bitboard {
         whitePawns | whiteKnights | whiteBishops | whiteRooks | whiteQueens | whiteKing
     }
     
-    var blackPieces: Bitboard {
+    public var blackPieces: Bitboard {
         blackPawns | blackKnights | blackBishops | blackRooks | blackQueens | blackKing
     }
     
-    var allPieces: Bitboard {
+    public var allPieces: Bitboard {
         whitePieces | blackPieces
     }
     
