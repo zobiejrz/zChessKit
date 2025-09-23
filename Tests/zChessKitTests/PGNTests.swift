@@ -123,15 +123,107 @@ import Testing
         120][%c_effect
         e1;square;e1;type;Winner;animated;true;keyPressed;undefined;persistent;true,c8;square;c8;type;ResignBlack;animated;true;keyPressed;undefined;persistent;true]}
         1-0
+        
+        [Event "Live Chess"]
+        [Site "Chess.com"]
+        [Date "2025.09.18"]
+        [Round "?"]
+        [White "Nair75"]
+        [Black "real_zobie"]
+        [Result "0-1"]
+        [TimeControl "600"]
+        [WhiteElo "1386"]
+        [BlackElo "1381"]
+        [Termination "real_zobie won by resignation"]
+        [ECO "C01"]
+        [EndTime "0:11:22 GMT+0000"]
+        [Link "https://www.chess.com/game/live/143249380584"]
+        
+        1. e4 e6 2. d4 d5 3. exd5 exd5 4. Nc3 Nf6 5. Bb5+ c6 6. Bd3 Bd6 7. Bg5 Nbd7 8.
+        Nge2 O-O 9. O-O Qb6 10. Rb1 Bb4 11. Na4 Qa5 12. c3 Bd6 13. b4 Qc7 14. h3 b5 15.
+        Nc5 Bxc5 16. bxc5 a5 17. a4 bxa4 18. Qxa4 Ne4 19. Bf4 Nxc3 20. Nxc3 Qxf4 21.
+        Qxc6 Nf6 22. Qxa8 Qg5 23. Kh2 Bxh3 24. Qxf8+ Kxf8 25. Kxh3 Qd2 26. Nxd5 Nxd5 27.
+        Rfd1 Qh6+ 28. Kg3 Qg5+ 29. Kf3 Qf4+ 30. Ke2 Nc3+ 31. Kf1 Nxd1 32. Rxd1 Qxd4 33.
+        Be2 Qxc5 34. Ra1 Qb4 35. Bd3 a4 36. Rb1 Qc3 37. Bxh7 a3 38. Be4 a2 39. Re1 a1=Q
+        40. Rb1 0-1
+        
+        [Event "Live Chess"]
+        [Site "Chess.com"]
+        [Date "2025.09.17"]
+        [Round "?"]
+        [White "MalCerebro"]
+        [Black "real_zobie"]
+        [Result "0-1"]
+        [TimeControl "600"]
+        [WhiteElo "1351"]
+        [BlackElo "1365"]
+        [Termination "real_zobie won - game abandoned"]
+        [ECO "C00"]
+        [EndTime "23:25:14 GMT+0000"]
+        [Link "https://www.chess.com/game/live/143248357170"]
+        
+        1. e4 e6 2. Nc3 d5 3. exd5 exd5 4. d4 Nf6 5. Bg5 Bb4 6. Qd3 Nc6 7. O-O-O O-O 8.
+        Kb1 Bxc3 9. Qxc3 Ne4 10. Bxd8 Nxc3+ 11. bxc3 Rxd8 12. Bb5 Bd7 13. Nf3 a6 14. Ba4
+        b5 15. Bb3 Be6 16. Rhe1 Na5 17. Ne5 Nc4 18. Nc6 Rd6 19. Ne5 f6 20. Nd3 a5 21. a4
+        bxa4 22. Bxa4 Rb8+ 23. Ka1 Bf5 24. Re8+ Rxe8 25. Bxe8 Na3 26. Kb2 Nc4+ 27. Ka2
+        Bxd3 28. cxd3 Nb6 29. Ka3 Re6 30. Bh5 g6 31. Bg4 f5 32. Bh3 Rc6 33. Rc1 Nc8 34.
+        g4 Nd6 35. gxf5 gxf5 36. Ka4 Kf8 37. Kxa5 Rb6 38. Bg2 Ke7 39. Bxd5 Rb5+ 40. Ka6
+        Rxd5 41. Re1+ Kf6 42. c4 Rxd4 43. c5 Nf7 44. Kb7 Rxd3 45. Kxc7 Rc3 46. c6 Ne5
+        47. Rxe5 Kxe5 48. Kd7 Ke4 49. c7 Kf3 50. c8=Q Rxc8 51. Kxc8 Kxf2 52. Kd7 f4 53.
+        Ke6 f3 54. Kf5 Kg2 55. Kg4 f2 56. h3 f1=Q 57. h4 Qf6 58. h5 Qh6 59. Kh4 Kf2 60.
+        Kg4 Qg7+ 61. Kh4 Qf6+ 62. Kg4 Ke3 63. h6 Qxh6 64. Kf5 Qg6+ 65. Ke5 h6 0-1
+        
+        [Event "Live Chess"]
+        [Site "Chess.com"]
+        [Date "2025.09.17"]
+        [Round "-"]
+        [White "real_zobie"]
+        [Black "jokerpez"]
+        [Result "1-0"]
+        [CurrentPosition "8/8/r7/6R1/5Bk1/6P1/6K1/8 b - - 13 57"]
+        [Timezone "UTC"]
+        [ECO "B09"]
+        [ECOUrl "https://www.chess.com/openings/Pirc-Defense-Main-Line-Austrian-Attack-4...Bg7-5.e5-dxe5"]
+        [UTCDate "2025.09.17"]
+        [UTCTime "01:25:49"]
+        [WhiteElo "1332"]
+        [BlackElo "1328"]
+        [TimeControl "600"]
+        [Termination "real_zobie won by checkmate"]
+        [StartTime "01:25:49"]
+        [EndDate "2025.09.17"]
+        [EndTime "01:42:58"]
+        [Link "https://www.chess.com/analysis/game/live/143211107298/analysis?move=112"]
+        [WhiteUrl "https://images.chesscomfiles.com/uploads/v1/user/123828444.65833378.50x50o.36881bc35c13.jpg"]
+        [WhiteCountry "2"]
+        [WhiteTitle ""]
+        [BlackUrl "https://www.chess.com/bundles/web/images/noavatar_l.84a92436.gif"]
+        [BlackCountry "34"]
+        [BlackTitle ""]
+        
+        1. e4 d6 2. d4 Nf6 3. Nc3 g6 4. f4 Bg7 5. e5 dxe5 6. fxe5 Nd5 7. Nxd5 Qxd5 8.
+        Nf3 Nc6 9. c3 O-O 10. Be2 f6 11. O-O fxe5 12. b3 Kh8 13. Bc4 Qd6 14. Ng5 Rxf1+
+        15. Qxf1 Qf6 16. Nf7+ Kg8 17. Qxf6 Bxf6 18. Bh6 e6 19. Ng5 Bxg5 20. Bxg5 exd4
+        21. Bh6 dxc3 22. Rf1 Bd7 23. Rc1 Ne5 24. Rxc3 Nxc4 25. Rxc4 c6 26. Rd4 Bc8 27.
+        Rf4 Bd7 28. Rd4 Rd8 29. Bg5 Rb8 30. Rxd7 h5 31. Re7 b5 32. Rxe6 c5 33. Rxg6+ Kf7
+        34. Rf6+ Kg7 35. Ra6 c4 36. Rxa7+ Kg6 37. Bf4 Rd8 38. Ra6+ Kf5 39. g3 c3 40. Rc6
+        b4 41. Kg2 h4 42. Kh3 hxg3 43. hxg3 Rh8+ 44. Kg2 Re8 45. Kf2 Ra8 46. Bd6 Rxa2+
+        47. Kf3 c2 48. Bxb4 $9 (48. Bf4 c1=Q 49. g4#) 48... Rb2 49. Rc3 c1=Q 50. Rxc1
+        Rxb3+ 51. Bc3 Kg5 52. Kg2 Kg4 53. Be5 Ra3 54. Rc4+ Kf5 55. Bf4 Ra6 56. Rc5+ Kg4
+        57. Rg5# 1-0
         """
     
     let tokens = Lexer().run(input: PGN)
     let games = try! Parser().parse(tokens: tokens)
     
-    #expect(games.count == 3, "Three games were in the input")
-        
+    #expect(games.count == 6, "The number of inputted PGNs needs to match number of games")
+    
     #expect(games[0].currentState == BoardState(FEN: "r4r2/ppp1n1Qp/2kpP3/8/4P3/2N5/PPP3PP/R3K2R b KQ - 0 19"), "These boardstates should match")
     #expect(games[1].currentState == BoardState(FEN: "5r1k/p5b1/7p/1p4p1/4n3/P1N1q3/1PP1N1PP/R5KR w - - 2 24"), "These boardstates should match")
     #expect(games[2].currentState == BoardState(FEN: "2kr1b1r/p4Qpp/B1p2n2/8/3P1p2/5P2/PP3P1P/4K2R b K - 1 17"), "These boardstates should match")
+    #expect(games[3].currentState == BoardState(FEN: "5k2/5pp1/8/8/4B3/2q5/5PP1/qR3K2 b - - 1 40"), "These boardstates should match")
+    #expect(games[4].currentState == BoardState(FEN: "8/8/6qp/4K3/8/4k3/8/8 w - - 0 66"), "These boardstates should match")
+    #expect(games[5].currentState == BoardState(FEN: "8/8/r7/6R1/5Bk1/6P1/6K1/8 b - - 13 57"), "These boardstates should match")
+
 
 }
