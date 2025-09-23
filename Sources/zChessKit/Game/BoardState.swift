@@ -633,7 +633,7 @@ public struct BoardState: Codable {
     
     // MARK: - Combined Move Generator (Entry Point)
     
-    func generateAllLegalMoves(_ player: PlayerColor? = nil) -> [Move] {
+    public func generateAllLegalMoves(_ player: PlayerColor? = nil) -> [Move] {
                 
         let playerToGenerate = player ?? self.playerToMove
         var output: [Move] = []
@@ -731,6 +731,11 @@ public struct BoardState: Codable {
                         enpassantTargetSqauare: newEPTargetSquare,
                         castlingRights: self.castlingRights
                     )
+                }
+                
+                // 3. Filter out illegal moves (e.g., moves that get/leave king in check)
+                guard !resultingBoardState.isKingInCheck(self.playerToMove) else {
+                    continue
                 }
                 
                 let move = Move(
