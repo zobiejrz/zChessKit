@@ -542,14 +542,14 @@ public struct BoardState: Codable {
         // add castling moves
         if self.castlingRights.contains(.k) && originSquare == .e8 && !self.isKingInCheck(.black) {
             if !self.allPieces.hasPiece(on: .f8) && !self.allPieces.hasPiece(on: .g8) && self.blackRooks.hasPiece(on: .h8) {
-                if !self.isKingInCheck(.white, kingLocation: Bitboard.squareMask(.f8)) {
+                if !self.isKingInCheck(.black, kingLocation: Bitboard.squareMask(.f8)) {
                     total |= Bitboard.squareMask(.g8)
                 }
             }
         }
         if self.castlingRights.contains(.q) && originSquare == .e8 && !self.isKingInCheck(.black) {
             if !self.allPieces.hasPiece(on: .d8) && !self.allPieces.hasPiece(on: .c8) && !self.allPieces.hasPiece(on: .b8) && self.blackRooks.hasPiece(on: .a8) {
-                if !self.isKingInCheck(.white, kingLocation: Bitboard.squareMask(.d8)) {
+                if !self.isKingInCheck(.black, kingLocation: Bitboard.squareMask(.d8)) {
                     total |= Bitboard.squareMask(.c8)
                 }
             }
@@ -1275,13 +1275,13 @@ public struct BoardState: Codable {
         // 2. Handle castling
         if san == "O-O" || san == "0-0" {
             piece = .king
-            from = .e1
-            to = .g1
+            from = self.playerToMove == .white ? .e1 : .e8
+            to = self.playerToMove == .white ? .g1 : .g8
             promotion = nil
         } else if san == "O-O-O" || san == "0-0-0" {
             piece = .king
-            from = .e1
-            to = .c1
+            from = self.playerToMove == .white ? .e1 : .e8
+            to = self.playerToMove == .white ? .c1 : .c8
             promotion = nil
         } else {
             
