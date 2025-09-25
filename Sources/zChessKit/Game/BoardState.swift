@@ -1049,16 +1049,21 @@ public struct BoardState: Codable {
             let capturedPiece: PieceType? = self.whatPieceIsOn(destSquare)
                         
             let resultingBoardState: BoardState
+            let isCastling: Bool
+
             if self.playerToMove == .white {
                 let newCastlingRights = self.castlingRights.filter { $0 != .K && $0 != .Q }
                 
                 let newRookBoard: Bitboard
                 if originSquare == .e1 && destSquare == .g1 {
                     newRookBoard = (self.whiteRooks & ~Bitboard.squareMask(.h1)) | Bitboard.squareMask(.f1)
+                    isCastling = true
                 } else if originSquare == .e1 && destSquare == .c1 {
                     newRookBoard = (self.whiteRooks & ~Bitboard.squareMask(.a1)) | Bitboard.squareMask(.d1)
+                    isCastling = true
                 } else {
                     newRookBoard = self.whiteRooks
+                    isCastling = false
                 }
                 
                 resultingBoardState = BoardState(
@@ -1085,10 +1090,13 @@ public struct BoardState: Codable {
                 let newRookBoard: Bitboard
                 if originSquare == .e8 && destSquare == .g8 {
                     newRookBoard = (self.blackRooks & ~Bitboard.squareMask(.h8)) | Bitboard.squareMask(.f8)
+                    isCastling = true
                 } else if originSquare == .e8 && destSquare == .c8 {
                     newRookBoard = (self.blackRooks & ~Bitboard.squareMask(.a8)) | Bitboard.squareMask(.d8)
+                    isCastling = true
                 } else {
                     newRookBoard = self.blackRooks
+                    isCastling = false
                 }
                 resultingBoardState = BoardState(
                     whitePawns: self.whitePawns & ~destbb,
@@ -1123,7 +1131,8 @@ public struct BoardState: Codable {
                 promotion: nil,
                 resultingBoardState: resultingBoardState,
                 ply: self.plyNumber+1,
-                color: self.playerToMove.opposite()
+                color: self.playerToMove.opposite(),
+                isCastling: isCastling
             )
             
             output.append(move)
