@@ -5,7 +5,7 @@
 //  Created by Ben Zobrist on 9/12/25.
 //
 
-enum TokenType {
+public enum TokenType: Sendable {
     case STRING, INTEGER, PERIOD, ASTERISK, NAG, SYMBOL,
          L_BRACKET, R_BRACKET,
          L_PARENTHESIS, R_PARENTHESIS,

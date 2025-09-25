@@ -5,7 +5,7 @@
 //  Created by Ben Zobrist on 9/12/25.
 //
 
-class Parser {
+public class Parser {
     
     enum ParserError: Error {
         // possible errors the parser can throw are here
