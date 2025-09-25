@@ -28,6 +28,10 @@ public class Lexer {
         ]
     private(set) var tokens: [Token] = []
     
+    public init() {
+        self.tokens = []
+    }
+    
     @discardableResult public func run(input: String) -> [Token] {
         
         // While we are processing the PGN
