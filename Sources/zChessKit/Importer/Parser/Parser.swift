@@ -16,7 +16,7 @@ public class Parser {
         case unexpectedEOF
     }
     
-    func parse(tokens: [Token]) throws -> [Game] {
+    public func parse(tokens: [Token]) throws -> [Game] {
         var games: [Game] = []
         var stream = TokenStream(tokens: tokens)
         
