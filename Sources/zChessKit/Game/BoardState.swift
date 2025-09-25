@@ -1136,7 +1136,7 @@ public struct BoardState: Codable {
     
     // MARK: - Utility Functions
     
-    func isKingInCheck(_ color: PlayerColor? = nil, kingLocation: Bitboard? = nil) -> Bool {
+    public func isKingInCheck(_ color: PlayerColor? = nil, kingLocation: Bitboard? = nil) -> Bool {
         let playerToCheck = color ?? self.playerToMove
         
         if playerToCheck == .white { // see if black pieces attack white king
