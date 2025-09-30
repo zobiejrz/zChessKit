@@ -5,7 +5,7 @@
 //  Created by Ben Zobrist on 9/12/25.
 //
 
-class Parser {
+public class Parser {
     
     enum ParserError: Error {
         // possible errors the parser can throw are here
@@ -16,7 +16,9 @@ class Parser {
         case unexpectedEOF
     }
     
-    func parse(tokens: [Token]) throws -> [Game] {
+    public init () { }
+    
+    public func parse(tokens: [Token]) throws -> [Game] {
         var games: [Game] = []
         var stream = TokenStream(tokens: tokens)
         
@@ -53,7 +55,7 @@ class Parser {
     }
     
     private func matchHeaderList(_ stream: inout TokenStream, _ game: Game) throws -> Game {
-        var game = game
+        let game = game
         
         while let token = stream.peek(), token.tokenType == .L_BRACKET {
             stream.consume() // consume '['
@@ -95,7 +97,7 @@ class Parser {
             case .ASTERISK, 
                     .SYMBOL where ["1-0", "0-1", "1/2-1/2"].contains(token.value):
                 // Consume and set result
-                let resultToken = stream.consume()!
+                let _ = stream.consume()!
                 // TODO: Is this something I even want to account for? I could just store in the tags or disregard
 //                game.result = resultToken.value
                 return game
@@ -143,7 +145,7 @@ class Parser {
     }
     
     private func matchMove(_ stream: inout TokenStream, _ game: Game) throws -> Game {
-        var game = game
+        let game = game
         
         // 1. Skip move numbers like `1.` or `1...`
         if let t = stream.peek(), t.tokenType == .INTEGER {
@@ -200,16 +202,16 @@ class Parser {
                 if let val = Int(t.value.dropFirst()) { // "$5" → 5
                     nags.append(val)
                 }
-            case .L_CURLY_BRACKET:
-                _ = stream.consume() // consume '{'
-                var comment = ""
-                while let next = stream.peek(), next.tokenType != .R_CURLY_BRACKET {
-                    comment += (stream.consume()?.value ?? "") + " "
-                }
-                if stream.peek()?.tokenType == .R_CURLY_BRACKET {
-                    _ = stream.consume() // consume '}'
-                }
-                annotations.append(comment.trimmingCharacters(in: .whitespaces))
+            case .COMMENT:
+                _ = stream.consume() // consume '{...}'
+                var comment = t.value // '{...}' --> '...'
+                comment.removeFirst()
+                comment.removeLast()
+                let cleaned = comment
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                    .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+
+                annotations.append(cleaned)
             default:
                 return (annotations.joined(separator: " "), nags) // stop when no more annotations
             }

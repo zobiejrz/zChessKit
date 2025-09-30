@@ -227,3 +227,47 @@ import Testing
 
 
 }
+
+@Test func testCommentedLines() async throws {
+    
+    let PGN = """
+        [Event "Line 01"]
+        [Site "?"]
+        [Date "????.??.??"]
+        [Round "?"]
+        [White "zChess"]
+        [Black "USER"]
+        [Result "0-1"]
+        
+        1. e4 {To get to the Traxler Counterattack, we first have to get to the Italian
+        Game: Two Knights Defense. Respond to 1. e4 with 1... e5.} 1... e5 2. Nf3
+        {Notice how 2. Nf3 attacks our e5 pawn. Defend it with 2... Nc6.} 2... Nc6 3.
+        Bc4 {We've made it to the Italian Game. Several responses are available from
+        here, but we achieve the Two Knights Defense with 3... Nf6.} 3... Nf6 4. Ng5
+        {Now that we see the Fried Liver Attack, we can tempt White to fork our Queen
+        and Rook with 4... Bc5.} 4... Bc5 5. Nxf7 {We start the Counterattack with 5...
+        Bxf2+, sacrificing the exchange.} 5... Bxf2+ {Think about ways to check the King
+        that tries to draw the opposing King out into the open.} 6. Kxf2 {The King
+        doesn't always have to take, but if it does we need to get another pawn with
+        6... Nxe4+, which puts more pressure on the exposed enemy King.} 6... Nxe4+
+        {Find a follow up check that puts more pressure on the opposing King.} 7. Ke3
+        {Now that the King is marching forward, we get our Queen into the attack with
+        7... Qh4. This defends the e4 Knight while continuing to put pressure on the
+        exposed enemy King.} 7... Qh4 {Look for ways to save our Queen from the fork and
+        defend our Knight.} 8. Nxh8 {White should have remembered that King safety is
+        more important than winning a Rook. M4 starting with 8... Qf4+.} 8... Qf4+
+        {Check the King with our Queen.} 9. Kd3 {The King only has one square to run
+        away to right now and 9... Nb4+ forces it back towards our Queen.} 9... Nb4+
+        {Try using the other Knight to force the King to its last remaining square.} 10.
+        Ke2 {Now we can finish the game with 10... Qf2#.} 10... Qf2# {Find the checkmate
+        in one.} 0-1
+        """
+    
+    let tokens = Lexer().run(input: PGN)
+    let games = try! Parser().parse(tokens: tokens)
+    
+    #expect(games.count == 1, "The number of inputted PGNs needs to match number of games")
+    #expect(games[0].currentState == BoardState(FEN: "r1b1k2N/pppp2pp/8/4p3/1nB1n3/8/PPPPKqPP/RNBQ3R w q - 5 11"), "These boardstates should match")
+    #expect(games[0].moves.first?.annotation == "To get to the Traxler Counterattack, we first have to get to the Italian Game: Two Knights Defense. Respond to 1. e4 with 1... e5.")
+    #expect(games[0].moves.last?.annotation == "Find the checkmate in one.")
+}

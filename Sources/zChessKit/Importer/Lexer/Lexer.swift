@@ -5,7 +5,7 @@
 //  Created by Ben Zobrist on 9/12/25.
 //
 
-class Lexer {
+public class Lexer {
     private let automata: [Automata] = [
         StringAutomaton(),
         IntegerAutomaton(),
@@ -24,11 +24,16 @@ class Lexer {
         SingleCharacterAutomaton(char: "/", type: .FORWARD_SLASH),
         NAGAutomaton(),
         SymbolAutomaton(),
+        CommentAutomata(),
         OpenCommandAutomaton()
         ]
     private(set) var tokens: [Token] = []
     
-    @discardableResult func run(input: String) -> [Token] {
+    public init() {
+        self.tokens = []
+    }
+    
+    @discardableResult public func run(input: String) -> [Token] {
         
         // While we are processing the PGN
         //      loop through each automata

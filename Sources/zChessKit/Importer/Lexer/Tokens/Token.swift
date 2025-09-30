@@ -5,7 +5,7 @@
 //  Created by Ben Zobrist on 9/12/25.
 //
 
-struct Token {
+public struct Token: Sendable {
     let tokenType: TokenType
     let value: String
 }
