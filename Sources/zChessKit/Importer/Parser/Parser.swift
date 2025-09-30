@@ -55,7 +55,7 @@ public class Parser {
     }
     
     private func matchHeaderList(_ stream: inout TokenStream, _ game: Game) throws -> Game {
-        var game = game
+        let game = game
         
         while let token = stream.peek(), token.tokenType == .L_BRACKET {
             stream.consume() // consume '['
@@ -97,7 +97,7 @@ public class Parser {
             case .ASTERISK, 
                     .SYMBOL where ["1-0", "0-1", "1/2-1/2"].contains(token.value):
                 // Consume and set result
-                let resultToken = stream.consume()!
+                let _ = stream.consume()!
                 // TODO: Is this something I even want to account for? I could just store in the tags or disregard
 //                game.result = resultToken.value
                 return game
@@ -145,7 +145,7 @@ public class Parser {
     }
     
     private func matchMove(_ stream: inout TokenStream, _ game: Game) throws -> Game {
-        var game = game
+        let game = game
         
         // 1. Skip move numbers like `1.` or `1...`
         if let t = stream.peek(), t.tokenType == .INTEGER {
