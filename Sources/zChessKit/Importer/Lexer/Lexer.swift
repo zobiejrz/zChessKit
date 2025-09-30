@@ -24,6 +24,7 @@ public class Lexer {
         SingleCharacterAutomaton(char: "/", type: .FORWARD_SLASH),
         NAGAutomaton(),
         SymbolAutomaton(),
+        CommentAutomata(),
         OpenCommandAutomaton()
         ]
     private(set) var tokens: [Token] = []

@@ -690,6 +690,29 @@ public struct BoardState: Codable {
             } else {
                 newEPTargetSquare = .empty
             }
+            
+            let newCastlingRights: [CastlingRights]
+            if capturedPiece == .rook {
+                if playerToGenerate == .white { // remove black's ability to castle the direction we took their rook
+                    if destSquare == .a8 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .q }
+                    } else if destSquare == .h8 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .k }
+                    } else {
+                        newCastlingRights = self.castlingRights
+                    }
+                } else { // remove white's ability to castle the direction we took their rook
+                    if destSquare == .a1 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .Q }
+                    } else if destSquare == .h1 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .K }
+                    } else {
+                        newCastlingRights = self.castlingRights
+                    }
+                }
+            } else {
+                newCastlingRights = self.castlingRights
+            }
                         
             for promotion in possiblePromotions {
                 let resultingBoardState: BoardState
@@ -710,7 +733,7 @@ public struct BoardState: Codable {
                         plyNumber: self.plyNumber+1,
                         playerToMove: self.playerToMove.opposite(),
                         enpassantTargetSqauare: newEPTargetSquare,
-                        castlingRights: self.castlingRights
+                        castlingRights: newCastlingRights
                     )
                 } else {
                     resultingBoardState = BoardState(
@@ -729,7 +752,7 @@ public struct BoardState: Codable {
                         plyNumber: self.plyNumber+1,
                         playerToMove: self.playerToMove.opposite(),
                         enpassantTargetSqauare: newEPTargetSquare,
-                        castlingRights: self.castlingRights
+                        castlingRights: newCastlingRights
                     )
                 }
                 
@@ -760,6 +783,29 @@ public struct BoardState: Codable {
             
             let capturedPiece: PieceType? = self.whatPieceIsOn(destSquare)
 
+            let newCastlingRights: [CastlingRights]
+            if capturedPiece == .rook {
+                if playerToGenerate == .white { // remove black's ability to castle the direction we took their rook
+                    if destSquare == .a8 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .q }
+                    } else if destSquare == .h8 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .k }
+                    } else {
+                        newCastlingRights = self.castlingRights
+                    }
+                } else { // remove white's ability to castle the direction we took their rook
+                    if destSquare == .a1 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .Q }
+                    } else if destSquare == .h1 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .K }
+                    } else {
+                        newCastlingRights = self.castlingRights
+                    }
+                }
+            } else {
+                newCastlingRights = self.castlingRights
+            }
+            
             let resultingBoardState: BoardState
             if self.playerToMove == .white {
                 resultingBoardState = BoardState(
@@ -778,7 +824,7 @@ public struct BoardState: Codable {
                     plyNumber: self.plyNumber+1,
                     playerToMove: self.playerToMove.opposite(),
                     enpassantTargetSqauare: Bitboard.empty,
-                    castlingRights: self.castlingRights
+                    castlingRights: newCastlingRights
                 )
             } else {
                 resultingBoardState = BoardState(
@@ -797,7 +843,7 @@ public struct BoardState: Codable {
                     plyNumber: self.plyNumber+1,
                     playerToMove: self.playerToMove.opposite(),
                     enpassantTargetSqauare: Bitboard.empty,
-                    castlingRights: self.castlingRights
+                    castlingRights: newCastlingRights
                 )
             }
             
@@ -828,6 +874,29 @@ public struct BoardState: Codable {
             
             let capturedPiece: PieceType? = self.whatPieceIsOn(destSquare)
             
+            let newCastlingRights: [CastlingRights]
+            if capturedPiece == .rook {
+                if playerToGenerate == .white { // remove black's ability to castle the direction we took their rook
+                    if destSquare == .a8 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .q }
+                    } else if destSquare == .h8 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .k }
+                    } else {
+                        newCastlingRights = self.castlingRights
+                    }
+                } else { // remove white's ability to castle the direction we took their rook
+                    if destSquare == .a1 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .Q }
+                    } else if destSquare == .h1 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .K }
+                    } else {
+                        newCastlingRights = self.castlingRights
+                    }
+                }
+            } else {
+                newCastlingRights = self.castlingRights
+            }
+            
             let resultingBoardState: BoardState
             if self.playerToMove == .white {
                 resultingBoardState = BoardState(
@@ -846,7 +915,7 @@ public struct BoardState: Codable {
                     plyNumber: self.plyNumber+1,
                     playerToMove: self.playerToMove.opposite(),
                     enpassantTargetSqauare: Bitboard.empty,
-                    castlingRights: self.castlingRights
+                    castlingRights: newCastlingRights
                 )
             } else {
                 resultingBoardState = BoardState(
@@ -865,7 +934,7 @@ public struct BoardState: Codable {
                     plyNumber: self.plyNumber+1,
                     playerToMove: self.playerToMove.opposite(),
                     enpassantTargetSqauare: Bitboard.empty,
-                    castlingRights: self.castlingRights
+                    castlingRights: newCastlingRights
                 )
             }
             
@@ -895,16 +964,37 @@ public struct BoardState: Codable {
             let destbb = Bitboard.squareMask(destSquare)
             
             let capturedPiece: PieceType? = self.whatPieceIsOn(destSquare)
-                        
+            
+            var newCastlingRights: [CastlingRights] = []
+            if capturedPiece == .rook {
+                if playerToGenerate == .white { // remove black's ability to castle the direction we took their rook
+                    if destSquare == .a8 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .q }
+                    } else if destSquare == .h8 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .k }
+                    } else {
+                        newCastlingRights = self.castlingRights
+                    }
+                } else { // remove white's ability to castle the direction we took their rook
+                    if destSquare == .a1 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .Q }
+                    } else if destSquare == .h1 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .K }
+                    } else {
+                        newCastlingRights = self.castlingRights
+                    }
+                }
+            } else {
+                newCastlingRights = self.castlingRights
+            }
+            
             let resultingBoardState: BoardState
             if self.playerToMove == .white {
-                let newCastlingRights: [CastlingRights]
+                // Remove our own ability to castle if we move our rook
                 if originSquare == .a1 {
-                    newCastlingRights = self.castlingRights.filter { $0 != .Q }
+                    newCastlingRights = newCastlingRights.filter { $0 != .Q }
                 } else if originSquare == .h1 {
-                    newCastlingRights = self.castlingRights.filter { $0 != .K }
-                } else {
-                    newCastlingRights = self.castlingRights
+                    newCastlingRights = newCastlingRights.filter { $0 != .K }
                 }
                 resultingBoardState = BoardState(
                     whitePawns: self.whitePawns,
@@ -925,13 +1015,11 @@ public struct BoardState: Codable {
                     castlingRights: newCastlingRights
                 )
             } else {
-                let newCastlingRights: [CastlingRights]
+                // Remove our own ability to castle if we move our rook
                 if originSquare == .a8 {
-                    newCastlingRights = self.castlingRights.filter { $0 != .q }
+                    newCastlingRights = newCastlingRights.filter { $0 != .q }
                 } else if originSquare == .h8 {
-                    newCastlingRights = self.castlingRights.filter { $0 != .k }
-                } else {
-                    newCastlingRights = self.castlingRights
+                    newCastlingRights = newCastlingRights.filter { $0 != .k }
                 }
                 resultingBoardState = BoardState(
                     whitePawns: self.whitePawns & ~destbb,
@@ -980,6 +1068,29 @@ public struct BoardState: Codable {
             
             let capturedPiece: PieceType? = self.whatPieceIsOn(destSquare)
             
+            let newCastlingRights: [CastlingRights]
+            if capturedPiece == .rook {
+                if playerToGenerate == .white { // remove black's ability to castle the direction we took their rook
+                    if destSquare == .a8 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .q }
+                    } else if destSquare == .h8 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .k }
+                    } else {
+                        newCastlingRights = self.castlingRights
+                    }
+                } else { // remove white's ability to castle the direction we took their rook
+                    if destSquare == .a1 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .Q }
+                    } else if destSquare == .h1 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .K }
+                    } else {
+                        newCastlingRights = self.castlingRights
+                    }
+                }
+            } else {
+                newCastlingRights = self.castlingRights
+            }
+            
             let resultingBoardState: BoardState
             if self.playerToMove == .white {
                 resultingBoardState = BoardState(
@@ -998,7 +1109,7 @@ public struct BoardState: Codable {
                     plyNumber: self.plyNumber+1,
                     playerToMove: self.playerToMove.opposite(),
                     enpassantTargetSqauare: Bitboard.empty,
-                    castlingRights: self.castlingRights
+                    castlingRights: newCastlingRights
                 )
             } else {
                 resultingBoardState = BoardState(
@@ -1017,7 +1128,7 @@ public struct BoardState: Codable {
                     plyNumber: self.plyNumber+1,
                     playerToMove: self.playerToMove.opposite(),
                     enpassantTargetSqauare: Bitboard.empty,
-                    castlingRights: self.castlingRights
+                    castlingRights: newCastlingRights
                 )
             }
             
@@ -1047,12 +1158,35 @@ public struct BoardState: Codable {
             let destbb = Bitboard.squareMask(destSquare)
             
             let capturedPiece: PieceType? = self.whatPieceIsOn(destSquare)
-                        
+            
+            var newCastlingRights: [CastlingRights]
+            if capturedPiece == .rook {
+                if playerToGenerate == .white { // remove black's ability to castle the direction we took their rook
+                    if destSquare == .a8 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .q }
+                    } else if destSquare == .h8 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .k }
+                    } else {
+                        newCastlingRights = self.castlingRights
+                    }
+                } else { // remove white's ability to castle the direction we took their rook
+                    if destSquare == .a1 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .Q }
+                    } else if destSquare == .h1 {
+                        newCastlingRights = self.castlingRights.filter { $0 != .K }
+                    } else {
+                        newCastlingRights = self.castlingRights
+                    }
+                }
+            } else {
+                newCastlingRights = self.castlingRights
+            }
+            
             let resultingBoardState: BoardState
             let isCastling: Bool
 
             if self.playerToMove == .white {
-                let newCastlingRights = self.castlingRights.filter { $0 != .K && $0 != .Q }
+                newCastlingRights = newCastlingRights.filter { $0 != .K && $0 != .Q }
                 
                 let newRookBoard: Bitboard
                 if originSquare == .e1 && destSquare == .g1 {
@@ -1085,7 +1219,7 @@ public struct BoardState: Codable {
                     castlingRights: newCastlingRights
                 )
             } else {
-                let newCastlingRights = self.castlingRights.filter { $0 != .k && $0 != .q }
+                newCastlingRights = newCastlingRights.filter { $0 != .k && $0 != .q }
                 
                 let newRookBoard: Bitboard
                 if originSquare == .e8 && destSquare == .g8 {

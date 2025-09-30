@@ -202,16 +202,16 @@ public class Parser {
                 if let val = Int(t.value.dropFirst()) { // "$5" → 5
                     nags.append(val)
                 }
-            case .L_CURLY_BRACKET:
-                _ = stream.consume() // consume '{'
-                var comment = ""
-                while let next = stream.peek(), next.tokenType != .R_CURLY_BRACKET {
-                    comment += (stream.consume()?.value ?? "") + " "
-                }
-                if stream.peek()?.tokenType == .R_CURLY_BRACKET {
-                    _ = stream.consume() // consume '}'
-                }
-                annotations.append(comment.trimmingCharacters(in: .whitespaces))
+            case .COMMENT:
+                _ = stream.consume() // consume '{...}'
+                var comment = t.value // '{...}' --> '...'
+                comment.removeFirst()
+                comment.removeLast()
+                let cleaned = comment
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                    .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+
+                annotations.append(cleaned)
             default:
                 return (annotations.joined(separator: " "), nags) // stop when no more annotations
             }
