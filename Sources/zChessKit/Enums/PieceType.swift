@@ -26,4 +26,21 @@ public enum PieceType: Codable {
             return nil
         }
     }
+    
+    public func toLetter() -> String {
+        switch self {
+        case .pawn:
+            "p"
+        case .knight:
+            "n"
+        case .bishop:
+            "b"
+        case .rook:
+            "r"
+        case .queen:
+            "q"
+        case .king:
+            "k"
+        }
+    }
 }

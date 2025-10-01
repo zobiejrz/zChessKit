@@ -39,7 +39,7 @@ public struct Move {
     public var uci: String {
         // Compute Universal Chess Interface format (e.g. "e2e4", "e7e8q")
         // Format: from square + to square + promotion (if any)
-        return "" // TODO: Placeholder
+        return "\(from)\(to)\(promotion?.toLetter() ?? "")"
     }
     
     // MARK: - Init
