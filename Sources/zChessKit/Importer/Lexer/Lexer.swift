@@ -11,9 +11,9 @@ public class Lexer {
     // MARK: - Static Lexers
     public static func getFENLexer() -> Lexer {
         return Lexer(automata: [
-            SymbolAutomaton(),
             SingleCharacterAutomaton(char: "/", type: .FORWARD_SLASH),
             IntegerAutomaton(),
+            SymbolAutomaton()
         ])
     }
     

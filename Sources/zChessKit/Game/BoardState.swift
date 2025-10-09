@@ -45,7 +45,24 @@ public struct BoardState: Codable {
     
     //MARK: - Init functions
     
-    public init(whitePawns: Bitboard, whiteKnights: Bitboard, whiteBishops: Bitboard, whiteRooks: Bitboard, whiteQueens: Bitboard, whiteKing: Bitboard, blackPawns: Bitboard, blackKnights: Bitboard, blackBishops: Bitboard, blackRooks: Bitboard, blackQueens: Bitboard, blackKing: Bitboard, plyNumber: Int, playerToMove: PlayerColor, enpassantTargetSqauare: Bitboard, castlingRights: [CastlingRights]) {
+    public init(
+        whitePawns: Bitboard,
+        whiteKnights: Bitboard,
+        whiteBishops: Bitboard,
+        whiteRooks: Bitboard,
+        whiteQueens: Bitboard,
+        whiteKing: Bitboard,
+        blackPawns: Bitboard,
+        blackKnights: Bitboard,
+        blackBishops: Bitboard,
+        blackRooks: Bitboard,
+        blackQueens: Bitboard,
+        blackKing: Bitboard,
+        plyNumber: Int,
+        playerToMove: PlayerColor,
+        enpassantTargetSqauare: Bitboard,
+        castlingRights: [CastlingRights]
+    ) {
         self.whitePawns = whitePawns
         self.whiteKnights = whiteKnights
         self.whiteBishops = whiteBishops
@@ -64,129 +81,13 @@ public struct BoardState: Codable {
         self.castlingRights = castlingRights
     }
     
-    public init(FEN: String) {
-        var whitePawns: Bitboard = .empty
-        var whiteKnights: Bitboard = .empty
-        var whiteBishops: Bitboard = .empty
-        var whiteRooks: Bitboard = .empty
-        var whiteQueens: Bitboard = .empty
-        var whiteKing: Bitboard = .empty
-        var blackPawns: Bitboard = .empty
-        var blackKnights: Bitboard = .empty
-        var blackBishops: Bitboard = .empty
-        var blackRooks: Bitboard = .empty
-        var blackQueens: Bitboard = .empty
-        var blackKing: Bitboard = .empty
+    public static func fromFEN(_ fen: String) -> BoardState? {
+        let tokens = Lexer.getFENLexer().run(input: fen)
+        let state = try? Parser.parseFEN(from: tokens)
         
-        let lexer = Lexer.getFENLexer()
-        let tokens = lexer.run(input: FEN)
-        
-        var idx = 0
-        var rank = 7
-        while rank >= 0 {
-            var file = 0
-            let current = tokens[idx]
-            idx += 1
-            
-            if current.tokenType == .FORWARD_SLASH {
-                continue
-            }
-            
-            while file <= 7 {
-                if current.tokenType == .SYMBOL {
-                    for currPiece in current.value {
-                        let sq = Square(rawValue: (rank*8) + file)!
-                        if currPiece == "K" {
-                            whiteKing |= Bitboard.squareMask(sq)
-                        } else if currPiece == "Q" {
-                            whiteQueens |= Bitboard.squareMask(sq)
-                        } else if currPiece == "R" {
-                            whiteRooks |= Bitboard.squareMask(sq)
-                        } else if currPiece == "B" {
-                            whiteBishops |= Bitboard.squareMask(sq)
-                        } else if currPiece == "N" {
-                            whiteKnights |= Bitboard.squareMask(sq)
-                        } else if currPiece == "P" {
-                            whitePawns |= Bitboard.squareMask(sq)
-                        } else if currPiece == "k" {
-                            blackKing |= Bitboard.squareMask(sq)
-                        } else if currPiece == "q" {
-                            blackQueens |= Bitboard.squareMask(sq)
-                        } else if currPiece == "r" {
-                            blackRooks |= Bitboard.squareMask(sq)
-                        } else if currPiece == "b" {
-                            blackBishops |= Bitboard.squareMask(sq)
-                        } else if currPiece == "n" {
-                            blackKnights |= Bitboard.squareMask(sq)
-                        } else if currPiece == "p" {
-                            blackPawns |= Bitboard.squareMask(sq)
-                        } else if currPiece.isNumber {
-                            let emptySquares = Int("\(currPiece)")! - 1
-                            file += emptySquares
-                        }
-                        file += 1
-                    }
-                } else if current.tokenType == .INTEGER {
-                    let emptySquares = Int(current.value)!
-                    file += emptySquares
-                }
-            }
-            
-            rank -= 1
-        }
-        
-        self.whitePawns = whitePawns
-        self.whiteKnights = whiteKnights
-        self.whiteBishops = whiteBishops
-        self.whiteRooks = whiteRooks
-        self.whiteQueens = whiteQueens
-        self.whiteKing = whiteKing
-        self.blackPawns = blackPawns
-        self.blackKnights = blackKnights
-        self.blackBishops = blackBishops
-        self.blackRooks = blackRooks
-        self.blackQueens = blackQueens
-        self.blackKing = blackKing
-        
-        self.playerToMove = tokens[idx].value == "w" ? .white : .black
-        idx += 1
-        
-        let castling = tokens[idx].value
-        var castlingRights: [CastlingRights] = []
-        if castling.contains("K") {
-            castlingRights.append(.K)
-        }
-        if castling.contains("Q") {
-            castlingRights.append(.Q)
-        }
-        if castling.contains("k") {
-            castlingRights.append(.k)
-        }
-        if castling.contains("q") {
-            castlingRights.append(.q)
-        }
-        self.castlingRights = castlingRights
-        idx += 1
-        
-        if tokens[idx].value == "-" {
-            self.enpassantTargetSquare = .empty
-        } else {
-            let rank: Int = Int(tokens[idx].value.unicodeScalars.first!.value - "a".unicodeScalars.first!.value)
-            let file = Int(tokens[idx].value.unicodeScalars.last!.value - "1".unicodeScalars.first!.value)
-            
-            let sq = Square(rawValue: (rank * 8) + file)!
-            self.enpassantTargetSquare = Bitboard.squareMask(sq)
-        }
-        idx += 1
-        
-        // MARK: Halfmove Clock isn't something I do anything with at the moment
-        
-        idx += 1
-        var plyNumber = (Int(tokens[idx].value)! - 1) * 2
-        if self.playerToMove == .black {
-            plyNumber += 1
-        }
-        self.plyNumber = plyNumber
+        // TODO: Probably should ensure only one FEN in string
+        // or maybe return [BoardState] instead
+        return state?.first
     }
     
     // MARK: - Piece Move Generators (Pseudo-Legal)

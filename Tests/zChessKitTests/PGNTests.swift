@@ -32,13 +32,13 @@ import Testing
         """
     
     let tokens = Lexer.getPGNLexer().run(input: PGN)
-    let games = try! Parser().parse(tokens: tokens)
+    let games = try! Parser.parsePGN(from: tokens)
     
     #expect(games.count == 1, "Only one game was in the input")
     
     let game = games.first!
     
-    #expect(game.currentState == BoardState(FEN: "r4r2/ppp1n1Qp/2kpP3/8/4P3/2N5/PPP3PP/R3K2R b KQ - 0 19"), "These boardstates should match")
+    #expect(game.currentState == BoardState.fromFEN("r4r2/ppp1n1Qp/2kpP3/8/4P3/2N5/PPP3PP/R3K2R b KQ - 0 19")!, "These boardstates should match")
     
 }
 
@@ -214,16 +214,16 @@ import Testing
         """
     
     let tokens = Lexer.getPGNLexer().run(input: PGN)
-    let games = try! Parser().parse(tokens: tokens)
-    
+    let games = try! Parser.parsePGN(from: tokens)
+
     #expect(games.count == 6, "The number of inputted PGNs needs to match number of games")
     
-    #expect(games[0].currentState == BoardState(FEN: "r4r2/ppp1n1Qp/2kpP3/8/4P3/2N5/PPP3PP/R3K2R b KQ - 0 19"), "These boardstates should match")
-    #expect(games[1].currentState == BoardState(FEN: "5r1k/p5b1/7p/1p4p1/4n3/P1N1q3/1PP1N1PP/R5KR w - - 2 24"), "These boardstates should match")
-    #expect(games[2].currentState == BoardState(FEN: "2kr1b1r/p4Qpp/B1p2n2/8/3P1p2/5P2/PP3P1P/4K2R b K - 1 17"), "These boardstates should match")
-    #expect(games[3].currentState == BoardState(FEN: "5k2/5pp1/8/8/4B3/2q5/5PP1/qR3K2 b - - 1 40"), "These boardstates should match")
-    #expect(games[4].currentState == BoardState(FEN: "8/8/6qp/4K3/8/4k3/8/8 w - - 0 66"), "These boardstates should match")
-    #expect(games[5].currentState == BoardState(FEN: "8/8/r7/6R1/5Bk1/6P1/6K1/8 b - - 13 57"), "These boardstates should match")
+    #expect(games[0].currentState == BoardState.fromFEN("r4r2/ppp1n1Qp/2kpP3/8/4P3/2N5/PPP3PP/R3K2R b KQ - 0 19")!, "These boardstates should match")
+    #expect(games[1].currentState == BoardState.fromFEN("5r1k/p5b1/7p/1p4p1/4n3/P1N1q3/1PP1N1PP/R5KR w - - 2 24")!, "These boardstates should match")
+    #expect(games[2].currentState == BoardState.fromFEN("2kr1b1r/p4Qpp/B1p2n2/8/3P1p2/5P2/PP3P1P/4K2R b K - 1 17")!, "These boardstates should match")
+    #expect(games[3].currentState == BoardState.fromFEN("5k2/5pp1/8/8/4B3/2q5/5PP1/qR3K2 b - - 1 40")!, "These boardstates should match")
+    #expect(games[4].currentState == BoardState.fromFEN("8/8/6qp/4K3/8/4k3/8/8 w - - 0 66")!, "These boardstates should match")
+    #expect(games[5].currentState == BoardState.fromFEN("8/8/r7/6R1/5Bk1/6P1/6K1/8 b - - 13 57")!, "These boardstates should match")
 
 
 }
@@ -264,10 +264,10 @@ import Testing
         """
     
     let tokens = Lexer.getPGNLexer().run(input: PGN)
-    let games = try! Parser().parse(tokens: tokens)
-    
+    let games = try! Parser.parsePGN(from: tokens)
+
     #expect(games.count == 1, "The number of inputted PGNs needs to match number of games")
-    #expect(games[0].currentState == BoardState(FEN: "r1b1k2N/pppp2pp/8/4p3/1nB1n3/8/PPPPKqPP/RNBQ3R w q - 5 11"), "These boardstates should match")
+    #expect(games[0].currentState == BoardState.fromFEN("r1b1k2N/pppp2pp/8/4p3/1nB1n3/8/PPPPKqPP/RNBQ3R w q - 5 11")!, "These boardstates should match")
     #expect(games[0].moves.first?.annotation == "To get to the Traxler Counterattack, we first have to get to the Italian Game: Two Knights Defense. Respond to 1. e4 with 1... e5.")
     #expect(games[0].moves.last?.annotation == "Find the checkmate in one.")
 }
