@@ -31,7 +31,7 @@ import Testing
         Ng6 15. Qf5+ Ne6 16. Qf7+ Ne7 17. f5 Rhf8 18. fxe6+ Kc6 19. Qxg7 1-0
         """
     
-    let tokens = Lexer().run(input: PGN)
+    let tokens = Lexer.getPGNLexer().run(input: PGN)
     let games = try! Parser().parse(tokens: tokens)
     
     #expect(games.count == 1, "Only one game was in the input")
@@ -213,7 +213,7 @@ import Testing
         57. Rg5# 1-0
         """
     
-    let tokens = Lexer().run(input: PGN)
+    let tokens = Lexer.getPGNLexer().run(input: PGN)
     let games = try! Parser().parse(tokens: tokens)
     
     #expect(games.count == 6, "The number of inputted PGNs needs to match number of games")
@@ -263,7 +263,7 @@ import Testing
         in one.} 0-1
         """
     
-    let tokens = Lexer().run(input: PGN)
+    let tokens = Lexer.getPGNLexer().run(input: PGN)
     let games = try! Parser().parse(tokens: tokens)
     
     #expect(games.count == 1, "The number of inputted PGNs needs to match number of games")

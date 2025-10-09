@@ -78,7 +78,7 @@ public struct BoardState: Codable {
         var blackQueens: Bitboard = .empty
         var blackKing: Bitboard = .empty
         
-        let lexer = Lexer()
+        let lexer = Lexer.getFENLexer()
         let tokens = lexer.run(input: FEN)
         
         var idx = 0
