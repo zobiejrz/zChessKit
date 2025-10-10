@@ -280,3 +280,40 @@ import Testing
     
     #expect(move.san == "e4", "These need to match")
 }
+
+@Test func testGetPGN() async throws {
+    let PGN = """
+        [Event "Live Chess"]
+        [Site "Chess.com"]
+        [Date "2025.09.17"]
+        [Round "?"]
+        [White "MalCerebro"]
+        [Black "real_zobie"]
+        [Result "0-1"]
+        [TimeControl "600"]
+        [WhiteElo "1351"]
+        [BlackElo "1365"]
+        [Termination "real_zobie won - game abandoned"]
+        [ECO "C00"]
+        [EndTime "23:25:14 GMT+0000"]
+        [Link "https://www.chess.com/game/live/143248357170"]
+        
+        1. e4 e6 2. Nc3 d5 3. exd5 exd5 4. d4 Nf6 5. Bg5 Bb4 6. Qd3 Nc6 7. O-O-O O-O 8.
+        Kb1 Bxc3 9. Qxc3 Ne4 10. Bxd8 Nxc3+ 11. bxc3 Rxd8 12. Bb5 Bd7 13. Nf3 a6 14. Ba4
+        b5 15. Bb3 Be6 16. Rhe1 Na5 17. Ne5 Nc4 18. Nc6 Rd6 19. Ne5 f6 20. Nd3 a5 21. a4
+        bxa4 22. Bxa4 Rb8+ 23. Ka1 Bf5 24. Re8+ Rxe8 25. Bxe8 Na3 26. Kb2 Nc4+ 27. Ka2
+        Bxd3 28. cxd3 Nb6 29. Ka3 Re6 30. Bh5 g6 31. Bg4 f5 32. Bh3 Rc6 33. Rc1 Nc8 34.
+        g4 Nd6 35. gxf5 gxf5 36. Ka4 Kf8 37. Kxa5 Rb6 38. Bg2 Ke7 39. Bxd5 Rb5+ 40. Ka6
+        Rxd5 41. Re1+ Kf6 42. c4 Rxd4 43. c5 Nf7 44. Kb7 Rxd3 45. Kxc7 Rc3 46. c6 Ne5
+        47. Rxe5 Kxe5 48. Kd7 Ke4 49. c7 Kf3 50. c8=Q Rxc8 51. Kxc8 Kxf2 52. Kd7 f4 53.
+        Ke6 f3 54. Kf5 Kg2 55. Kg4 f2 56. h3 f1=Q 57. h4 Qf6 58. h5 Qh6 59. Kh4 Kf2 60.
+        Kg4 Qg7+ 61. Kh4 Qf6+ 62. Kg4 Ke3 63. h6 Qxh6 64. Kf5 Qg6+ 65. Ke5 h6 0-1
+        """
+    
+    let tokens = Lexer.getPGNLexer().run(input: PGN)
+    let games = try! Parser.parsePGN(from: tokens)
+    
+    #expect(games.count == 1, "The number of inputted PGNs needs to match number of games")
+    
+    print(games[0].getPGN())
+}

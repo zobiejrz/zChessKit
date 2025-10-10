@@ -739,12 +739,14 @@ extension BoardState {
         
         // --- Handle Castling ---
         if isCastling && piece == .king {
-            output = Bitboard.file(6)!.hasPiece(on: destSquare) ? "O-O" : "O-O-O"
+            let tmp = Bitboard.file(7)! & (resultingBoardState.blackKing | resultingBoardState.whiteKing) & Bitboard.squareMask(destSquare)
+            
+            output = tmp.hasPiece(on: destSquare) ? "O-O" : "O-O-O"
         } else { // Get the piece, disambiguation, capturing, destination, and promotion together
             
             // --- only file for pawns ---
             if piece != .pawn {
-                output += "\(piece.toLetter())"
+                output += "\(piece.toLetter().uppercased())"
             }
             
             // --- disambiguation (if applicable) ---
@@ -753,8 +755,12 @@ extension BoardState {
             let mask: Bitboard
             switch piece {
             case .pawn:
-                let others = playerToMove == .white ? self.whitePawns : self.blackPawns
-                mask = (playerToMove == .white ? destbb.seShift() | destbb.swShift() : destbb.neShift() | destbb.nwShift()) & others
+                if capturedPiece != nil {
+                    let others = playerToMove == .white ? self.whitePawns : self.blackPawns
+                    mask = (playerToMove == .white ? destbb.seShift() | destbb.swShift() : destbb.neShift() | destbb.nwShift()) & others
+                } else {
+                    mask = .empty
+                }
             case .knight:
                 let others = playerToMove == .white ? self.whiteKnights : self.blackKnights
                 mask = Square.generateKnightMoves(destSquare) & others
@@ -776,7 +782,7 @@ extension BoardState {
                 let rankChar = ("\(originSquare)".last!)
                 
                 let fileIndex = "abcdefgh".firstIndex(of: fileChar)!
-                let file = Int("abcdefgh".distance(from: "abcefgh".startIndex, to: fileIndex)) + 1 // 1...8
+                let file = Int("abcdefgh".distance(from: "abcdefgh".startIndex, to: fileIndex)) + 1 // 1...8
                 
                 if (Bitboard.file(file)! & mask) == mask {
                     output += String(fileChar)

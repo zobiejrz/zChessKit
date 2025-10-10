@@ -67,14 +67,6 @@ public class Game {
         self.moves[idx].nags.remove(at: indexInNAG)
     }
     
-    public func getPGN() -> String {
-        // TODO: Placeholder
-        // Format game data
-        // Format move text
-        // return string
-        return ""
-    }
-    
     public func getGameResult() -> GameResult {
         if self.currentState.generateAllLegalMoves().isEmpty {
             if self.currentState.isKingInCheck() {

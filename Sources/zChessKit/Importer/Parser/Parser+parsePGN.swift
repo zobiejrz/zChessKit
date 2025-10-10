@@ -63,7 +63,7 @@ extension Parser {
             guard let valueToken = stream.consume(), valueToken.tokenType == .STRING else {
                 throw ParserError.unexpectedToken(stream.peek()!)
             }
-            let tagValue = valueToken.value
+            let tagValue = String(valueToken.value.dropFirst().dropLast())
             
             // --- Closing bracket ---
             guard let rbr = stream.consume(), rbr.tokenType == .R_BRACKET else {
