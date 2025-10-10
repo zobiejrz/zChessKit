@@ -748,7 +748,6 @@ extension BoardState {
             }
             
             // --- disambiguation (if applicable) ---
-            let originbb = Bitboard.squareMask(originSquare)
             let destbb = Bitboard.squareMask(destSquare)
             
             let mask: Bitboard
