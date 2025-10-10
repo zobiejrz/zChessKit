@@ -271,3 +271,12 @@ import Testing
     #expect(games[0].moves.first?.annotation == "To get to the Traxler Counterattack, we first have to get to the Italian Game: Two Knights Defense. Respond to 1. e4 with 1... e5.")
     #expect(games[0].moves.last?.annotation == "Find the checkmate in one.")
 }
+
+@Test func testSANMove() async throws {
+    let game = Game()
+    game.makeMove(piece: .pawn, from: .e2, to: .e4)
+    
+    let move = game.moves.first!
+    
+    #expect(move.san == "e4", "These need to match")
+}

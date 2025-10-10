@@ -8,6 +8,7 @@
 import zBitboard
 
 extension BoardState {
+    // MARK: - generateAllLegalMoves
     public func generateAllLegalMoves(_ player: PlayerColor? = nil) -> [Move] {
         
         let playerToGenerate = player ?? self.playerToMove
@@ -22,6 +23,7 @@ extension BoardState {
         let kingMoves = playerToGenerate == .white ? self.generateWhiteKingMoves() : self.generateBlackKingMoves()
         
         // 2. Combine all possible pseudo-legal moves into Move Objects
+        // MARK: Pawn Moves
         for move in pawnMoves {
             let originSquare = Square(rawValue: move.from.popLSB()!.0)!
             let originbb = Bitboard.squareMask(originSquare)
@@ -136,6 +138,16 @@ extension BoardState {
                     continue
                 }
                 
+                let sanMove = self.generateSAN(
+                    from: originSquare,
+                    to: destSquare,
+                    piece: .pawn,
+                    capturedPiece: capturedPiece,
+                    promotion: promotion,
+                    isCastling: false,
+                    resultingBoardState: resultingBoardState
+                )
+                
                 let move = Move(
                     from: originSquare,
                     to: destSquare,
@@ -144,12 +156,14 @@ extension BoardState {
                     promotion: promotion,
                     resultingBoardState: resultingBoardState,
                     ply: self.plyNumber+1,
-                    color: self.playerToMove.opposite()
+                    color: self.playerToMove.opposite(),
+                    san: sanMove
                 )
                 output.append(move)
             }
         }
         
+        // MARK: Knight Moves
         for move in knightMoves {
             let originSquare = Square(rawValue: move.from.popLSB()!.0)!
             let originbb = Bitboard.squareMask(originSquare)
@@ -227,6 +241,16 @@ extension BoardState {
                 continue
             }
             
+            let sanMove = self.generateSAN(
+                from: originSquare,
+                to: destSquare,
+                piece: .knight,
+                capturedPiece: capturedPiece,
+                promotion: nil,
+                isCastling: false,
+                resultingBoardState: resultingBoardState
+            )
+            
             let move = Move(
                 from: originSquare,
                 to: destSquare,
@@ -235,12 +259,14 @@ extension BoardState {
                 promotion: nil,
                 resultingBoardState: resultingBoardState,
                 ply: self.plyNumber+1,
-                color: self.playerToMove.opposite()
+                color: self.playerToMove.opposite(),
+                san: sanMove
             )
             
             output.append(move)
         }
         
+        // MARK: Bishop Moves
         for move in bishopMoves {
             let originSquare = Square(rawValue: move.from.popLSB()!.0)!
             let originbb = Bitboard.squareMask(originSquare)
@@ -318,6 +344,16 @@ extension BoardState {
                 continue
             }
             
+            let sanMove = self.generateSAN(
+                from: originSquare,
+                to: destSquare,
+                piece: .bishop,
+                capturedPiece: capturedPiece,
+                promotion: nil,
+                isCastling: false,
+                resultingBoardState: resultingBoardState
+            )
+            
             let move = Move(
                 from: originSquare,
                 to: destSquare,
@@ -326,12 +362,14 @@ extension BoardState {
                 promotion: nil,
                 resultingBoardState: resultingBoardState,
                 ply: self.plyNumber+1,
-                color: self.playerToMove.opposite()
+                color: self.playerToMove.opposite(),
+                san: sanMove
             )
             
             output.append(move)
         }
         
+        // MARK: Rook Moves
         for move in rookMoves {
             let originSquare = Square(rawValue: move.from.popLSB()!.0)!
             let originbb = Bitboard.squareMask(originSquare)
@@ -421,6 +459,16 @@ extension BoardState {
                 continue
             }
             
+            let sanMove = self.generateSAN(
+                from: originSquare,
+                to: destSquare,
+                piece: .rook,
+                capturedPiece: capturedPiece,
+                promotion: nil,
+                isCastling: false,
+                resultingBoardState: resultingBoardState
+            )
+            
             let move = Move(
                 from: originSquare,
                 to: destSquare,
@@ -429,12 +477,14 @@ extension BoardState {
                 promotion: nil,
                 resultingBoardState: resultingBoardState,
                 ply: self.plyNumber+1,
-                color: self.playerToMove.opposite()
+                color: self.playerToMove.opposite(),
+                san: sanMove
             )
             
             output.append(move)
         }
         
+        // MARK: Queen Moves
         for move in queenMoves {
             let originSquare = Square(rawValue: move.from.popLSB()!.0)!
             let originbb = Bitboard.squareMask(originSquare)
@@ -512,6 +562,16 @@ extension BoardState {
                 continue
             }
             
+            let sanMove = self.generateSAN(
+                from: originSquare,
+                to: destSquare,
+                piece: .queen,
+                capturedPiece: capturedPiece,
+                promotion: nil,
+                isCastling: false,
+                resultingBoardState: resultingBoardState
+            )
+            
             let move = Move(
                 from: originSquare,
                 to: destSquare,
@@ -520,12 +580,14 @@ extension BoardState {
                 promotion: nil,
                 resultingBoardState: resultingBoardState,
                 ply: self.plyNumber+1,
-                color: self.playerToMove.opposite()
+                color: self.playerToMove.opposite(),
+                san: sanMove
             )
             
             output.append(move)
         }
         
+        // MARK: King Moves
         for move in kingMoves {
             let originSquare = Square(rawValue: move.from.popLSB()!.0)!
             //            let originbb = Bitboard.squareMask(originSquare)
@@ -632,6 +694,16 @@ extension BoardState {
                 continue
             }
             
+            let sanMove = self.generateSAN(
+                from: originSquare,
+                to: destSquare,
+                piece: .king,
+                capturedPiece: capturedPiece,
+                promotion: nil,
+                isCastling: isCastling,
+                resultingBoardState: resultingBoardState
+            )
+            
             let move = Move(
                 from: originSquare,
                 to: destSquare,
@@ -641,13 +713,113 @@ extension BoardState {
                 resultingBoardState: resultingBoardState,
                 ply: self.plyNumber+1,
                 color: self.playerToMove.opposite(),
-                isCastling: isCastling
+                isCastling: isCastling,
+                san: sanMove
             )
             
             output.append(move)
         }
         
         // 4. Return resulting legal [Move] list
+        return output
+    }
+    
+    // MARK: - generateSAN
+    private func generateSAN(
+        from originSquare: Square,
+        to destSquare: Square,
+        piece: PieceType,
+        capturedPiece: PieceType?,
+        promotion: PieceType?,
+        isCastling: Bool,
+        resultingBoardState: BoardState
+    ) -> String {
+        
+        var output: String = ""
+        
+        // --- Handle Castling ---
+        if isCastling && piece == .king {
+            output = Bitboard.file(6)!.hasPiece(on: destSquare) ? "O-O" : "O-O-O"
+        } else { // Get the piece, disambiguation, capturing, destination, and promotion together
+            
+            // --- only file for pawns ---
+            if piece != .pawn {
+                output += "\(piece.toLetter())"
+            }
+            
+            // --- disambiguation (if applicable) ---
+            let originbb = Bitboard.squareMask(originSquare)
+            let destbb = Bitboard.squareMask(destSquare)
+            
+            let mask: Bitboard
+            switch piece {
+            case .pawn:
+                let others = playerToMove == .white ? self.whitePawns : self.blackPawns
+                mask = (playerToMove == .white ? destbb.seShift() | destbb.swShift() : destbb.neShift() | destbb.nwShift()) & others
+            case .knight:
+                let others = playerToMove == .white ? self.whiteKnights : self.blackKnights
+                mask = Square.generateKnightMoves(destSquare) & others
+            case .bishop:
+                let others = playerToMove == .white ? self.whiteBishops : self.blackBishops
+                mask = Square.slidingBishopAttacks(at: destSquare, blockers: self.allPieces) & others
+            case .rook:
+                let others = playerToMove == .white ? self.whiteRooks : self.blackRooks
+                mask = Square.slidingRookAttacks(at: destSquare, blockers: self.allPieces) & others
+            case .queen:
+                let others = playerToMove == .white ? self.whiteQueens : self.blackQueens
+                mask = Square.slidingQueenAttacks(at: destSquare, blockers: self.allPieces) & others
+            case .king:
+                mask = .empty // this makes no sense but like needs to be exhaustive ig
+            }
+            
+            if mask.nonzeroBitCount == 2 { // one disambiguation needed
+                let fileChar = ("\(originSquare)".first!)
+                let rankChar = ("\(originSquare)".last!)
+                
+                let fileIndex = "abcdefgh".firstIndex(of: fileChar)!
+                let file = Int("abcdefgh".distance(from: "abcefgh".startIndex, to: fileIndex)) + 1 // 1...8
+                
+                if (Bitboard.file(file)! & mask) == mask {
+                    output += String(fileChar)
+                } else {
+                    output += String(rankChar)
+                }
+            } else if mask.nonzeroBitCount >= 3 { // two disambiguation needed
+                output += "\(originSquare)"
+            } else { // disambiguation not needed
+            }
+            
+            // --- whether we are capturing ---
+            if capturedPiece != nil {
+                if piece == .pawn {
+                    output += String("\(originSquare)".first!)
+                }
+                output += "x"
+            }
+            // --- destination square ---
+            output += "\(destSquare)"
+            
+            // --- e.p. (if applicable) ---
+            if piece == .pawn && destbb == self.enpassantTargetSquare {
+                output += " e.p."
+            }
+            
+            // --- promotion (if applicable) ---
+            if let p = promotion {
+                output += "=\(p.toLetter())"
+            }
+        }
+        
+        // --- handle whether check/checkmate ---
+        
+        if resultingBoardState.isKingInCheck() {
+            if resultingBoardState.generateAllLegalMoves().count == 0 {
+                output += "#"
+            } else {
+                output += "+"
+            }
+        }
+        
         return output
     }
 }
