@@ -20,6 +20,4 @@ public class Parser {
         case invalidCharacter(String)
     }
     
-    private init () { }
-    
 }
