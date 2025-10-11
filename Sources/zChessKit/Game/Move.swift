@@ -74,7 +74,7 @@ extension Move: Equatable {
             lhs.piece == rhs.piece &&
             lhs.capturedPiece == rhs.capturedPiece &&
             lhs.promotion == rhs.promotion &&
-//            lhs.resultingBoardState == rhs.resultingBoardState &&
+            lhs.resultingBoardState == rhs.resultingBoardState &&
             lhs.ply == rhs.ply &&
             lhs.color == rhs.color &&
             lhs.isCastling == rhs.isCastling &&

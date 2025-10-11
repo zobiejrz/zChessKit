@@ -51,23 +51,46 @@ public class Game {
         return false
     }
     
-    public func setGamedata(for key: String, value: String) {
+    public func setGamedata(for key: String, value: String?) {
         self.gamedata[key] = value
     }
     
-    public func setMoveAnnotation(to idx: Int, value: String) {
+    public func setMoveAnnotation(to idx: Int, value: String?) {
+        guard idx >= 0 && idx < self.moves.count else { return }
         self.moves[idx].annotation = value
     }
     
     public func appendMoveNAG(to idx: Int, value: Int) {
-        self.moves[idx].nags.append(value)
+        guard idx >= 0 && idx < self.moves.count else { return }
+        guard value >= 0 && value < 140 else { return }
+        
+        if !self.moves[idx].nags.contains(value) {
+            self.moves[idx].nags.append(value)
+        }
     }
     
     public func removeMoveNAG(from idx: Int, indexInNAG: Int) {
+        guard idx >= 0 && idx < self.moves.count else { return }
+        guard indexInNAG >= 0 && indexInNAG < self.moves[idx].nags.count else { return }
         self.moves[idx].nags.remove(at: indexInNAG)
     }
     
     public func getGameResult() -> GameResult {
+        if let res = self.gamedata["Result"] {
+            switch res {
+            case "1/2-1/2":
+                return .draw
+            case "1-0":
+                return .checkmate
+            case "0-1":
+                return .checkmate
+            case "*":
+                return .ongoing
+            default:
+                break
+            }
+        }
+        
         if self.currentState.generateAllLegalMoves().isEmpty {
             if self.currentState.isKingInCheck() {
                 return .checkmate

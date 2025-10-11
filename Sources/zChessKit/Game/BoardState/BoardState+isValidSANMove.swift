@@ -71,8 +71,8 @@ extension BoardState {
                 disambiguationBB = .empty // have all the info already
             } else if disambiguation.count == 1 {
                 if disambiguation.first!.isNumber {
-                    guard let rank = Int(disambiguation) else { return nil }
-                    guard let bb = Bitboard.rank(rank) else { return nil }
+                    guard let rank = Int(disambiguation), (1...8).contains(rank) else { return nil }
+                    let bb = Bitboard.rank(rank)!
                     
                     disambiguationBB = bb
                     from = nil
@@ -80,7 +80,7 @@ extension BoardState {
                     let all = "abcdefgh"
                     guard let indexInStr = all.firstIndex(of: disambiguation.first!) else { return nil }
                     let file = all.distance(from: all.startIndex, to: indexInStr) + 1
-                    guard let bb = Bitboard.file(Int(file)) else { return nil }
+                    let bb = Bitboard.file(Int(file))!
                     
                     disambiguationBB = bb
                     from = nil
