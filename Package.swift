@@ -13,7 +13,7 @@ let package = Package(
         .executable(name: "zChessKit-cli", targets: ["zChessKit-cli"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/zobiejrz/zBitboard", from: "0.2.0"),
+        .package(url: "https://github.com/zobiejrz/zBitboard", from: "0.3.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
