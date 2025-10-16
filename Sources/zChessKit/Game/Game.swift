@@ -28,9 +28,9 @@ public class Game {
     
     @discardableResult
     public func makeMove(piece: PieceType, from origin: Square, to dest: Square, promotion: PieceType? = nil) -> Bool {
-        
         // validate the move against the current boardstate
         // add it to the move list if it is valid
+        
         if let resultingMove = self.currentState.isValidMove(piece: piece, from: origin, to: dest, promotion: promotion) {
             self.moves.append(resultingMove)
             return true
@@ -48,6 +48,18 @@ public class Game {
             return true
         }
         
+        return false
+    }
+    
+    @discardableResult
+    public func makeUCIMove(_ uci: String) -> Bool {
+        // validate the move against the current boardstate
+        // add it to the move list if it is valid
+        
+        if let resultingMove = self.currentState.isValidUCIMove(uci) {
+            self.moves.append(resultingMove)
+            return true
+        }
         return false
     }
     
