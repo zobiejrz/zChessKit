@@ -87,17 +87,24 @@ extension Parser {
                             blackKnights |= Bitboard.squareMask(sq)
                         } else if currPiece == "p" {
                             blackPawns |= Bitboard.squareMask(sq)
-                        } else if currPiece.isNumber {
-                            let emptySquares = Int("\(currPiece)")! - 1
+                        } else if currPiece.isNumber,
+                                  let intPiece = Int("\(currPiece)") {
+                            let emptySquares = intPiece - 1
                             file += emptySquares
+                            guard (0...7).contains(file) else { throw ParserError.invalidInteger(current.value) }
                         } else {
                             throw ParserError.invalidCharacter(current.value)
                         }
                         file += 1
+                        guard (1...8).contains(file) else { throw ParserError.invalidCharacter(current.value) }
                     }
                 } else if current.tokenType == .INTEGER {
                     guard let emptySquares = Int(current.value) else { throw ParserError.invalidInteger(current.value) }
-                    file += emptySquares
+                    guard (1...8).contains(emptySquares) else { throw ParserError.invalidInteger(current.value) }
+
+                    file += (emptySquares)
+                    guard (1...8).contains(file) else { throw ParserError.invalidInteger(current.value) }
+
                 }
             }
             

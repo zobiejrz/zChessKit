@@ -82,12 +82,12 @@ public struct BoardState: Codable {
     }
     
     public static func fromFEN(_ fen: String) -> BoardState? {
-        let tokens = Lexer.getFENLexer().run(input: fen)
-        let state = try? Parser.parseFEN(from: tokens)
+        guard let tokens = try? Lexer.getFENLexer().run(input: fen) else { return nil }
+        guard let state = try? Parser.parseFEN(from: tokens) else { return nil }
         
         // TODO: Probably should ensure only one FEN in string
         // or maybe return [BoardState] instead
-        return state?.first
+        return state.first
     }
         
     // MARK: - Static Constructors

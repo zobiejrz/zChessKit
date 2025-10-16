@@ -9,7 +9,7 @@ import Testing
 @testable import zChessKit
 
 @Test func testBoardStateBoardString() async throws {
-    let tokens = Lexer.getFENLexer().run(input: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 8/8/8/1P1p2qK/1P1P4/4kn2/8/8 w - - 3 61")
+    let tokens = try! Lexer.getFENLexer().run(input: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 8/8/8/1P1p2qK/1P1P4/4kn2/8/8 w - - 3 61")
     let result = try! Parser.parseFEN(from: tokens)
     
     let boardString1 = """
@@ -43,7 +43,7 @@ import Testing
 }
 
 @Test func testBoardStateEquatable() async throws {
-    let tokens = Lexer.getFENLexer().run(input: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 8/8/8/1P1p3K/1P1P4/4kn2/6q1/8 b - - 2 60 8/8/8/1P1p2qK/1P1P4/4kn2/8/8 w - - 3 61")
+    let tokens = try! Lexer.getFENLexer().run(input: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 8/8/8/1P1p3K/1P1P4/4kn2/6q1/8 b - - 2 60 8/8/8/1P1p2qK/1P1P4/4kn2/8/8 w - - 3 61")
     let result = try! Parser.parseFEN(from: tokens)
     
     #expect(result[0] == result[0], "BoardState should be equal to itself")
@@ -121,7 +121,7 @@ import Testing
         1k6/8/8/8/6Q1/8/4Q1Q1/5K2 w - - 0 1
         """
     
-    let tokens = Lexer.getFENLexer().run(input: FENList)
+    let tokens = try! Lexer.getFENLexer().run(input: FENList)
     let result = try! Parser.parseFEN(from: tokens)
     var allLegalMoves: [Move] = []
     
@@ -287,7 +287,7 @@ import Testing
 }
 
 @Test func testBoardStateWhatPieceIsOn() async throws {
-    let tokens = Lexer.getFENLexer().run(input: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+    let tokens = try! Lexer.getFENLexer().run(input: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     let result = try! Parser.parseFEN(from: tokens)
     
     #expect(result[0].whatPieceIsOn(.e1) == .king, "There is a king on this square")
@@ -356,7 +356,7 @@ import Testing
     #expect(whiteState.isValidSANMove("e8=Q") == nil, "This is an invalid SAN move")
     #expect(whiteState.isValidSANMove("e8=P") == nil, "This is an invalid SAN move")
 
-    let tokens = Lexer.getFENLexer().run(input: "7r/8/5k2/8/8/8/6pr/1K6 b - - 0 1")
+    let tokens = try! Lexer.getFENLexer().run(input: "7r/8/5k2/8/8/8/6pr/1K6 b - - 0 1")
     let result = try! Parser.parseFEN(from: tokens)
     let blackState = result.first!
     
@@ -408,4 +408,31 @@ import Testing
     #expect(state.isValidMove(piece: .pawn, from: .e2, to: .e4, promotion: nil) != nil, "This is an valid move")
     #expect(state.isValidMove(piece: .pawn, from: .e3, to: .e4, promotion: nil) == nil, "This is an invalid move")
 
+}
+
+@Test func testInvalidBoardState() async throws {
+    
+    let invalidStates = [
+        "rnbqkbnr/pppppppp/8/9/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "rnbqkbnr/ppppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "rnbqkbnr/pppppppp/8/8/8/8/ZZZZZZZZ/RNBQKBNR w KQkq - 0 1",
+        "THIS IS INVALID FEN",
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 2",
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 1",
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq 0 1",
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - 0 1",
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR KQkq - 0 1",
+        "w KQkq - 0 1",
+        "rnbqkbnr/pppppppp//PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "rn%qkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR ; KQkq - 0 1",
+        "rnbqkbnr/pppp3ppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "rnbqkbnr/3ppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    ]
+    
+    for (i, str) in invalidStates.enumerated() {
+        let state = BoardState.fromFEN(str)
+        #expect(state == nil, "This is an invalid FEN")
+//        print("string \(i) = \(state == nil ? "passed": "failed")")
+    }
 }

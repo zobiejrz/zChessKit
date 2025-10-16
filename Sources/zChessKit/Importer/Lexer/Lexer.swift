@@ -8,6 +8,11 @@
 public class Lexer {
     let automata: [Automata]
     
+    enum LexerError: Error {
+        // possible errors the parser can throw are here
+        case unrecognizedToken(String)
+    }
+    
     // MARK: - Static Lexers
     public static func getFENLexer() -> Lexer {
         return Lexer(automata: [
@@ -45,7 +50,7 @@ public class Lexer {
     }
     
     // MARK: - run(...)
-    @discardableResult public func run(input: String) -> [Token] {
+    @discardableResult public func run(input: String) throws -> [Token] {
         
         // While we are processing the PGN
         //      loop through each automata
@@ -88,7 +93,7 @@ public class Lexer {
             } else {
                 // No valid token found
                 let context = String(remaining.prefix(10))
-                fatalError("Lexer error: unrecognized token starting at: '\(context)'")
+                throw LexerError.unrecognizedToken(context)
             }
         }
         return tokens
