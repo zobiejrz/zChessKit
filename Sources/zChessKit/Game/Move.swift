@@ -22,25 +22,16 @@ public struct Move {
     public let color: PlayerColor
     public let isCastling: Bool
     
+    // MARK: - Move Notation
+    public let san: String
+    public let uci: String
+
     // MARK: - Annotations
     public var annotation: String?      // e.g. "!!", "?", "good move", "dubious"
     public var nags: [Int]              // Numeric Annotation Glyphs (e.g. 1 = "!", 2 = "?")
     
     // MARK: - Tree Structure
     public var variations: [Move]       // Represents alternative lines from this position
-    
-    // MARK: - Computed Notation (Not stored)
-    public var san: String {
-        // Compute Standard Algebraic Notation (e.g. "e4", "Nxf6", "O-O")
-        // Requires access to board state before this move
-        return "" // TODO: Placeholder
-    }
-    
-    public var uci: String {
-        // Compute Universal Chess Interface format (e.g. "e2e4", "e7e8q")
-        // Format: from square + to square + promotion (if any)
-        return "" // TODO: Placeholder
-    }
     
     // MARK: - Init
     public init(
@@ -50,11 +41,12 @@ public struct Move {
         capturedPiece: PieceType? = nil,
         promotion: PieceType? = nil,
         resultingBoardState: BoardState,
-        annotation: String? = nil,
-        nags: [Int] = [],
         ply: Int,
         color: PlayerColor,
         isCastling: Bool = false,
+        san: String,
+        annotation: String? = nil,
+        nags: [Int] = [],
         variations: [Move] = []
     ) {
         self.from = from
@@ -63,11 +55,13 @@ public struct Move {
         self.capturedPiece = capturedPiece
         self.promotion = promotion
         self.resultingBoardState = resultingBoardState
-        self.annotation = annotation
-        self.nags = nags
         self.ply = ply
         self.color = color
         self.isCastling = isCastling
+        self.san = san
+        self.uci = "\(from)\(to)\(promotion?.toLetter() ?? "")"
+        self.annotation = annotation
+        self.nags = nags
         self.variations = variations
     }
 }
@@ -80,7 +74,7 @@ extension Move: Equatable {
             lhs.piece == rhs.piece &&
             lhs.capturedPiece == rhs.capturedPiece &&
             lhs.promotion == rhs.promotion &&
-//            lhs.resultingBoardState == rhs.resultingBoardState &&
+            lhs.resultingBoardState == rhs.resultingBoardState &&
             lhs.ply == rhs.ply &&
             lhs.color == rhs.color &&
             lhs.isCastling == rhs.isCastling &&

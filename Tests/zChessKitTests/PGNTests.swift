@@ -31,14 +31,14 @@ import Testing
         Ng6 15. Qf5+ Ne6 16. Qf7+ Ne7 17. f5 Rhf8 18. fxe6+ Kc6 19. Qxg7 1-0
         """
     
-    let tokens = Lexer().run(input: PGN)
-    let games = try! Parser().parse(tokens: tokens)
+    let tokens = try! Lexer.getPGNLexer().run(input: PGN)
+    let games = try! Parser.parsePGN(from: tokens)
     
     #expect(games.count == 1, "Only one game was in the input")
     
     let game = games.first!
     
-    #expect(game.currentState == BoardState(FEN: "r4r2/ppp1n1Qp/2kpP3/8/4P3/2N5/PPP3PP/R3K2R b KQ - 0 19"), "These boardstates should match")
+    #expect(game.currentState == BoardState.fromFEN("r4r2/ppp1n1Qp/2kpP3/8/4P3/2N5/PPP3PP/R3K2R b KQ - 0 19")!, "These boardstates should match")
     
 }
 
@@ -213,17 +213,17 @@ import Testing
         57. Rg5# 1-0
         """
     
-    let tokens = Lexer().run(input: PGN)
-    let games = try! Parser().parse(tokens: tokens)
-    
+    let tokens = try! Lexer.getPGNLexer().run(input: PGN)
+    let games = try! Parser.parsePGN(from: tokens)
+
     #expect(games.count == 6, "The number of inputted PGNs needs to match number of games")
     
-    #expect(games[0].currentState == BoardState(FEN: "r4r2/ppp1n1Qp/2kpP3/8/4P3/2N5/PPP3PP/R3K2R b KQ - 0 19"), "These boardstates should match")
-    #expect(games[1].currentState == BoardState(FEN: "5r1k/p5b1/7p/1p4p1/4n3/P1N1q3/1PP1N1PP/R5KR w - - 2 24"), "These boardstates should match")
-    #expect(games[2].currentState == BoardState(FEN: "2kr1b1r/p4Qpp/B1p2n2/8/3P1p2/5P2/PP3P1P/4K2R b K - 1 17"), "These boardstates should match")
-    #expect(games[3].currentState == BoardState(FEN: "5k2/5pp1/8/8/4B3/2q5/5PP1/qR3K2 b - - 1 40"), "These boardstates should match")
-    #expect(games[4].currentState == BoardState(FEN: "8/8/6qp/4K3/8/4k3/8/8 w - - 0 66"), "These boardstates should match")
-    #expect(games[5].currentState == BoardState(FEN: "8/8/r7/6R1/5Bk1/6P1/6K1/8 b - - 13 57"), "These boardstates should match")
+    #expect(games[0].currentState == BoardState.fromFEN("r4r2/ppp1n1Qp/2kpP3/8/4P3/2N5/PPP3PP/R3K2R b KQ - 0 19")!, "These boardstates should match")
+    #expect(games[1].currentState == BoardState.fromFEN("5r1k/p5b1/7p/1p4p1/4n3/P1N1q3/1PP1N1PP/R5KR w - - 2 24")!, "These boardstates should match")
+    #expect(games[2].currentState == BoardState.fromFEN("2kr1b1r/p4Qpp/B1p2n2/8/3P1p2/5P2/PP3P1P/4K2R b K - 1 17")!, "These boardstates should match")
+    #expect(games[3].currentState == BoardState.fromFEN("5k2/5pp1/8/8/4B3/2q5/5PP1/qR3K2 b - - 1 40")!, "These boardstates should match")
+    #expect(games[4].currentState == BoardState.fromFEN("8/8/6qp/4K3/8/4k3/8/8 w - - 0 66")!, "These boardstates should match")
+    #expect(games[5].currentState == BoardState.fromFEN("8/8/r7/6R1/5Bk1/6P1/6K1/8 b - - 13 57")!, "These boardstates should match")
 
 
 }
@@ -263,11 +263,57 @@ import Testing
         in one.} 0-1
         """
     
-    let tokens = Lexer().run(input: PGN)
-    let games = try! Parser().parse(tokens: tokens)
-    
+    let tokens = try! Lexer.getPGNLexer().run(input: PGN)
+    let games = try! Parser.parsePGN(from: tokens)
+
     #expect(games.count == 1, "The number of inputted PGNs needs to match number of games")
-    #expect(games[0].currentState == BoardState(FEN: "r1b1k2N/pppp2pp/8/4p3/1nB1n3/8/PPPPKqPP/RNBQ3R w q - 5 11"), "These boardstates should match")
+    #expect(games[0].currentState == BoardState.fromFEN("r1b1k2N/pppp2pp/8/4p3/1nB1n3/8/PPPPKqPP/RNBQ3R w q - 5 11")!, "These boardstates should match")
     #expect(games[0].moves.first?.annotation == "To get to the Traxler Counterattack, we first have to get to the Italian Game: Two Knights Defense. Respond to 1. e4 with 1... e5.")
     #expect(games[0].moves.last?.annotation == "Find the checkmate in one.")
+}
+
+@Test func testSANMove() async throws {
+    let game = Game()
+    game.makeMove(piece: .pawn, from: .e2, to: .e4)
+    
+    let move = game.moves.first!
+    
+    #expect(move.san == "e4", "These need to match")
+}
+
+@Test func testGetPGN() async throws {
+    let PGN = """
+        [Event "Live Chess"]
+        [Site "Chess.com"]
+        [Date "2025.09.17"]
+        [Round "?"]
+        [White "MalCerebro"]
+        [Black "real_zobie"]
+        [Result "0-1"]
+        [TimeControl "600"]
+        [WhiteElo "1351"]
+        [BlackElo "1365"]
+        [Termination "real_zobie won - game abandoned"]
+        [ECO "C00"]
+        [EndTime "23:25:14 GMT+0000"]
+        [Link "https://www.chess.com/game/live/143248357170"]
+        
+        1. e4 e6 2. Nc3 d5 3. exd5 exd5 4. d4 Nf6 5. Bg5 Bb4 6. Qd3 Nc6 7. O-O-O O-O 8.
+        Kb1 Bxc3 9. Qxc3 Ne4 10. Bxd8 Nxc3+ 11. bxc3 Rxd8 12. Bb5 Bd7 13. Nf3 a6 14. Ba4
+        b5 15. Bb3 Be6 16. Rhe1 Na5 17. Ne5 Nc4 18. Nc6 Rd6 19. Ne5 f6 20. Nd3 a5 21. a4
+        bxa4 22. Bxa4 Rb8+ 23. Ka1 Bf5 24. Re8+ Rxe8 25. Bxe8 Na3 26. Kb2 Nc4+ 27. Ka2
+        Bxd3 28. cxd3 Nb6 29. Ka3 Re6 30. Bh5 g6 31. Bg4 f5 32. Bh3 Rc6 33. Rc1 Nc8 34.
+        g4 Nd6 35. gxf5 gxf5 36. Ka4 Kf8 37. Kxa5 Rb6 38. Bg2 Ke7 39. Bxd5 Rb5+ 40. Ka6
+        Rxd5 41. Re1+ Kf6 42. c4 Rxd4 43. c5 Nf7 44. Kb7 Rxd3 45. Kxc7 Rc3 46. c6 Ne5
+        47. Rxe5 Kxe5 48. Kd7 Ke4 49. c7 Kf3 50. c8=Q Rxc8 51. Kxc8 Kxf2 52. Kd7 f4 53.
+        Ke6 f3 54. Kf5 Kg2 55. Kg4 f2 56. h3 f1=Q 57. h4 Qf6 58. h5 Qh6 59. Kh4 Kf2 60.
+        Kg4 Qg7+ 61. Kh4 Qf6+ 62. Kg4 Ke3 63. h6 Qxh6 64. Kf5 Qg6+ 65. Ke5 h6 0-1
+        """
+    
+    let tokens = try! Lexer.getPGNLexer().run(input: PGN)
+    let games = try! Parser.parsePGN(from: tokens)
+    
+    #expect(games.count == 1, "The number of inputted PGNs needs to match number of games")
+    
+    print(games[0].getPGN())
 }

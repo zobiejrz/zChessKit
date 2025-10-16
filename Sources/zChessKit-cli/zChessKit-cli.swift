@@ -12,7 +12,7 @@ import zBitboard
 struct zChessKitCLI {
     
     static func main() {
-        var game = Game()
+        let game = Game()
         while game.getGameResult() == .ongoing {
             print(game.currentState.boardString())
             let color: PlayerColor = game.currentState.playerToMove == PlayerColor.white ? .white : .black

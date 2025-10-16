@@ -1,13 +1,13 @@
 {
-  "originHash" : "81bf709fddc9aa1bd4bf8cdd64dd572cf9bd0a03e6ea61f35817ac513f30896e",
+  "originHash" : "282704d7a8a52066e37fd4b46cebc13113996dfb11554e7d5d93f47cb252cc2d",
   "pins" : [
     {
       "identity" : "zbitboard",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/zobiejrz/zBitboard",
       "state" : {
-        "revision" : "27de64a15f004ed19ca6f34f4c54c58e0836bea9",
-        "version" : "0.2.0"
+        "revision" : "71c5329544c29200554d67c2b967be92b6b0c0d4",
+        "version" : "0.3.0"
       }
     }
   ],

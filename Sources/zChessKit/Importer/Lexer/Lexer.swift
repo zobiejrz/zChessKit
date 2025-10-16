@@ -6,34 +6,51 @@
 //
 
 public class Lexer {
-    private let automata: [Automata] = [
-        StringAutomaton(),
-        IntegerAutomaton(),
-        SingleCharacterAutomaton(char: ",", type: .COMMA),
-        SingleCharacterAutomaton(char: ";", type: .SEMICOLON),
-        SingleCharacterAutomaton(char: ".", type: .PERIOD),
-        SingleCharacterAutomaton(char: "*", type: .ASTERISK),
-        SingleCharacterAutomaton(char: "[", type: .L_BRACKET),
-        SingleCharacterAutomaton(char: "]", type: .R_BRACKET),
-        SingleCharacterAutomaton(char: "(", type: .L_PARENTHESIS),
-        SingleCharacterAutomaton(char: ")", type: .R_PARENTHESIS),
-        SingleCharacterAutomaton(char: "<", type: .L_ANGLE_BRACKET),
-        SingleCharacterAutomaton(char: ">", type: .R_ANGLE_BRACKET),
-        SingleCharacterAutomaton(char: "{", type: .L_CURLY_BRACKET),
-        SingleCharacterAutomaton(char: "}", type: .R_CURLY_BRACKET),
-        SingleCharacterAutomaton(char: "/", type: .FORWARD_SLASH),
-        NAGAutomaton(),
-        SymbolAutomaton(),
-        CommentAutomata(),
-        OpenCommandAutomaton()
-        ]
-    private(set) var tokens: [Token] = []
+    let automata: [Automata]
     
-    public init() {
-        self.tokens = []
+    enum LexerError: Error {
+        // possible errors the parser can throw are here
+        case unrecognizedToken(String)
     }
     
-    @discardableResult public func run(input: String) -> [Token] {
+    // MARK: - Static Lexers
+    public static func getFENLexer() -> Lexer {
+        return Lexer(automata: [
+            SingleCharacterAutomaton(char: "/", type: .FORWARD_SLASH),
+            IntegerAutomaton(),
+            SymbolAutomaton()
+        ])
+    }
+    
+    public static func getPGNLexer() -> Lexer {
+        return Lexer(automata: [
+            StringAutomaton(),
+            IntegerAutomaton(),
+            SingleCharacterAutomaton(char: ",", type: .COMMA),
+            SingleCharacterAutomaton(char: ";", type: .SEMICOLON),
+            SingleCharacterAutomaton(char: ".", type: .PERIOD),
+            SingleCharacterAutomaton(char: "*", type: .ASTERISK),
+            SingleCharacterAutomaton(char: "[", type: .L_BRACKET),
+            SingleCharacterAutomaton(char: "]", type: .R_BRACKET),
+            SingleCharacterAutomaton(char: "(", type: .L_PARENTHESIS),
+            SingleCharacterAutomaton(char: ")", type: .R_PARENTHESIS),
+            SingleCharacterAutomaton(char: "<", type: .L_ANGLE_BRACKET),
+            SingleCharacterAutomaton(char: ">", type: .R_ANGLE_BRACKET),
+            SingleCharacterAutomaton(char: "{", type: .L_CURLY_BRACKET),
+            SingleCharacterAutomaton(char: "}", type: .R_CURLY_BRACKET),
+            NAGAutomaton(),
+            SymbolAutomaton(),
+            CommentAutomata(),
+            OpenCommandAutomaton()
+        ])
+    }
+    
+    private init(automata: [Automata]) {
+        self.automata = automata
+    }
+    
+    // MARK: - run(...)
+    @discardableResult public func run(input: String) throws -> [Token] {
         
         // While we are processing the PGN
         //      loop through each automata
@@ -43,7 +60,7 @@ public class Lexer {
         //      Remove the first maxLength characters and put them in the token
         //      Append token to the end of self.tokens
         //      If ever there is no valid token for the current string, throw an error indicating this
-        self.tokens = []
+        var tokens: [Token] = []
         var remaining = input
         
         while remaining.count > 0 {
@@ -70,15 +87,15 @@ public class Lexer {
                 // Produce maxAutomata's token
                 let tokenValue = String(remaining.prefix(Int(maxLength)))
                 let token = Token(tokenType: automaton.getType(), value: tokenValue)
-                self.tokens.append(token)
+                tokens.append(token)
                 
                 remaining = String(remaining.dropFirst(Int(maxLength)))
             } else {
                 // No valid token found
                 let context = String(remaining.prefix(10))
-                fatalError("Lexer error: unrecognized token starting at: '\(context)'")
+                throw LexerError.unrecognizedToken(context)
             }
         }
-        return self.tokens
+        return tokens
     }
 }

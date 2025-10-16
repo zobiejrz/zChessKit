@@ -22,7 +22,7 @@ import zBitboard
 @Test func testBoardStateInitializer() async throws {
     
     let firstPos = BoardState.startingPosition()
-    let firstFEN = BoardState(FEN: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+    let firstFEN = BoardState.fromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")!
     
     #expect(firstPos == firstFEN, "These positions are the same")
     
@@ -44,7 +44,7 @@ import zBitboard
         enpassantTargetSqauare: .empty,
         castlingRights: [.K, .Q]
     )
-    let secondFEN = BoardState(FEN: "r4r2/ppp1n1Qp/2kpP3/8/4P3/2N5/PPP3PP/R3K2R b KQ - 0 19")
+    let secondFEN = BoardState.fromFEN("r4r2/ppp1n1Qp/2kpP3/8/4P3/2N5/PPP3PP/R3K2R b KQ - 0 19")!
     
     #expect(secondPos == secondFEN, "These positions are the same")
 }
