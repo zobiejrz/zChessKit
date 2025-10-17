@@ -19,14 +19,14 @@ You can add **zChessKit** directly to your project using Swift Package Manager.
 ```swift
 // In Xcode:
 File → Add Packages → Search for
-https://github.com/zobiejrz/zChessKit.git
+https://github.com/zobiejrz/zChessKit
 ```
 
 Or update your `Package.swift`:
 
 ``` swift
 dependencies: [
-    .package(url: "https://github.com/zobiejrz/zChessKit.git", from: "1.0.0")
+    .package(url: "https://github.com/zobiejrz/zChessKit", from: "1.0.0")
 ]
 ```
 
