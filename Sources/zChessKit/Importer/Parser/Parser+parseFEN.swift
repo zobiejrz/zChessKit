@@ -116,8 +116,7 @@ extension Parser {
         let enpassantTargetSquare = try self.matchEnPassantTargetSquare(&stream)
 
         
-        // TODO: Halfmove Clock isn't something I do anything with at the moment
-        let _ = try self.matchInteger(&stream) // halfMoveClock
+        let halfMoveClock = try self.matchInteger(&stream) // halfMoveClock
         let fullMoveClock = try self.matchInteger(&stream)
         let plyNumber = ((fullMoveClock - 1) * 2) + (playerToMove == .black ? 1 : 0)
         
@@ -134,6 +133,7 @@ extension Parser {
             blackRooks: blackRooks,
             blackQueens: blackQueens,
             blackKing: blackKing,
+            halfmoveClock: halfMoveClock,
             plyNumber: plyNumber,
             playerToMove: playerToMove,
             enpassantTargetSqauare: enpassantTargetSquare,

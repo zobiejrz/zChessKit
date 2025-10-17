@@ -20,6 +20,7 @@ extension BoardState: Equatable {
             lhs.blackRooks == rhs.blackRooks &&
             lhs.blackQueens == rhs.blackQueens &&
             lhs.blackKing == rhs.blackKing &&
+            lhs.halfmoveClock == rhs.halfmoveClock &&
             lhs.plyNumber == rhs.plyNumber &&
             lhs.playerToMove == rhs.playerToMove &&
             lhs.enpassantTargetSquare == rhs.enpassantTargetSquare &&
