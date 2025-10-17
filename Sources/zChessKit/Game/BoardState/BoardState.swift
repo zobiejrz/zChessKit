@@ -24,6 +24,7 @@ public struct BoardState: Codable {
     public let blackKing: Bitboard
     
     // MARK: - Metadata
+    public let halfmoveClock: Int
     public let plyNumber: Int
     public let playerToMove: PlayerColor
     public let enpassantTargetSquare: Bitboard
@@ -58,6 +59,7 @@ public struct BoardState: Codable {
         blackRooks: Bitboard,
         blackQueens: Bitboard,
         blackKing: Bitboard,
+        halfmoveClock: Int,
         plyNumber: Int,
         playerToMove: PlayerColor,
         enpassantTargetSqauare: Bitboard,
@@ -75,6 +77,7 @@ public struct BoardState: Codable {
         self.blackRooks = blackRooks
         self.blackQueens = blackQueens
         self.blackKing = blackKing
+        self.halfmoveClock = halfmoveClock
         self.plyNumber = plyNumber
         self.playerToMove = playerToMove
         self.enpassantTargetSquare = enpassantTargetSqauare
@@ -106,6 +109,7 @@ public struct BoardState: Codable {
             blackRooks: 0x8100000000000000,
             blackQueens: 0x0800000000000000,
             blackKing: 0x1000000000000000,
+            halfmoveClock: 0,
             plyNumber: 0,
             playerToMove: .white,
             enpassantTargetSqauare: Bitboard.empty,

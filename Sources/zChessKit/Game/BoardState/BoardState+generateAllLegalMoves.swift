@@ -107,6 +107,7 @@ extension BoardState {
                         blackRooks: self.blackRooks & ~destbb,
                         blackQueens: self.blackQueens & ~destbb,
                         blackKing: self.blackKing & ~destbb,
+                        halfmoveClock: 0,
                         plyNumber: self.plyNumber+1,
                         playerToMove: self.playerToMove.opposite(),
                         enpassantTargetSqauare: newEPTargetSquare,
@@ -126,6 +127,7 @@ extension BoardState {
                         blackRooks: promotion == .rook ? self.blackRooks | (destbb & Bitboard.rank1) : self.blackRooks,
                         blackQueens: promotion == .queen ? self.blackQueens | (destbb & Bitboard.rank1) : self.blackQueens,
                         blackKing: self.blackKing,
+                        halfmoveClock: 0,
                         plyNumber: self.plyNumber+1,
                         playerToMove: self.playerToMove.opposite(),
                         enpassantTargetSqauare: newEPTargetSquare,
@@ -171,7 +173,8 @@ extension BoardState {
             let destbb = Bitboard.squareMask(destSquare)
             
             let capturedPiece: PieceType? = self.whatPieceIsOn(destSquare)
-            
+            let newHalfMoveClock = capturedPiece == nil ? self.halfmoveClock + 1 : 0
+
             let newCastlingRights: [CastlingRights]
             if capturedPiece == .rook {
                 if playerToGenerate == .white { // remove black's ability to castle the direction we took their rook
@@ -210,6 +213,7 @@ extension BoardState {
                     blackRooks: self.blackRooks & ~destbb,
                     blackQueens: self.blackQueens & ~destbb,
                     blackKing: self.blackKing & ~destbb,
+                    halfmoveClock: newHalfMoveClock,
                     plyNumber: self.plyNumber+1,
                     playerToMove: self.playerToMove.opposite(),
                     enpassantTargetSqauare: Bitboard.empty,
@@ -229,6 +233,7 @@ extension BoardState {
                     blackRooks: self.blackRooks,
                     blackQueens: self.blackQueens,
                     blackKing: self.blackKing,
+                    halfmoveClock: newHalfMoveClock,
                     plyNumber: self.plyNumber+1,
                     playerToMove: self.playerToMove.opposite(),
                     enpassantTargetSqauare: Bitboard.empty,
@@ -274,7 +279,8 @@ extension BoardState {
             let destbb = Bitboard.squareMask(destSquare)
             
             let capturedPiece: PieceType? = self.whatPieceIsOn(destSquare)
-            
+            let newHalfMoveClock = capturedPiece == nil ? self.halfmoveClock + 1 : 0
+
             let newCastlingRights: [CastlingRights]
             if capturedPiece == .rook {
                 if playerToGenerate == .white { // remove black's ability to castle the direction we took their rook
@@ -313,6 +319,7 @@ extension BoardState {
                     blackRooks: self.blackRooks & ~destbb,
                     blackQueens: self.blackQueens & ~destbb,
                     blackKing: self.blackKing & ~destbb,
+                    halfmoveClock: newHalfMoveClock,
                     plyNumber: self.plyNumber+1,
                     playerToMove: self.playerToMove.opposite(),
                     enpassantTargetSqauare: Bitboard.empty,
@@ -332,6 +339,7 @@ extension BoardState {
                     blackRooks: self.blackRooks,
                     blackQueens: self.blackQueens,
                     blackKing: self.blackKing,
+                    halfmoveClock: newHalfMoveClock,
                     plyNumber: self.plyNumber+1,
                     playerToMove: self.playerToMove.opposite(),
                     enpassantTargetSqauare: Bitboard.empty,
@@ -377,7 +385,8 @@ extension BoardState {
             let destbb = Bitboard.squareMask(destSquare)
             
             let capturedPiece: PieceType? = self.whatPieceIsOn(destSquare)
-            
+            let newHalfMoveClock = capturedPiece == nil ? self.halfmoveClock + 1 : 0
+
             var newCastlingRights: [CastlingRights] = []
             if capturedPiece == .rook {
                 if playerToGenerate == .white { // remove black's ability to castle the direction we took their rook
@@ -422,6 +431,7 @@ extension BoardState {
                     blackRooks: self.blackRooks & ~destbb,
                     blackQueens: self.blackQueens & ~destbb,
                     blackKing: self.blackKing & ~destbb,
+                    halfmoveClock: newHalfMoveClock,
                     plyNumber: self.plyNumber+1,
                     playerToMove: self.playerToMove.opposite(),
                     enpassantTargetSqauare: Bitboard.empty,
@@ -447,6 +457,7 @@ extension BoardState {
                     blackRooks: (self.blackRooks & ~originbb) | destbb,
                     blackQueens: self.blackQueens,
                     blackKing: self.blackKing,
+                    halfmoveClock: newHalfMoveClock,
                     plyNumber: self.plyNumber+1,
                     playerToMove: self.playerToMove.opposite(),
                     enpassantTargetSqauare: Bitboard.empty,
@@ -492,7 +503,8 @@ extension BoardState {
             let destbb = Bitboard.squareMask(destSquare)
             
             let capturedPiece: PieceType? = self.whatPieceIsOn(destSquare)
-            
+            let newHalfMoveClock = capturedPiece == nil ? self.halfmoveClock + 1 : 0
+
             let newCastlingRights: [CastlingRights]
             if capturedPiece == .rook {
                 if playerToGenerate == .white { // remove black's ability to castle the direction we took their rook
@@ -531,6 +543,7 @@ extension BoardState {
                     blackRooks: self.blackRooks & ~destbb,
                     blackQueens: self.blackQueens & ~destbb,
                     blackKing: self.blackKing & ~destbb,
+                    halfmoveClock: newHalfMoveClock,
                     plyNumber: self.plyNumber+1,
                     playerToMove: self.playerToMove.opposite(),
                     enpassantTargetSqauare: Bitboard.empty,
@@ -550,6 +563,7 @@ extension BoardState {
                     blackRooks: self.blackRooks,
                     blackQueens: (self.blackQueens & ~originbb) | destbb,
                     blackKing: self.blackKing,
+                    halfmoveClock: newHalfMoveClock,
                     plyNumber: self.plyNumber+1,
                     playerToMove: self.playerToMove.opposite(),
                     enpassantTargetSqauare: Bitboard.empty,
@@ -595,7 +609,8 @@ extension BoardState {
             let destbb = Bitboard.squareMask(destSquare)
             
             let capturedPiece: PieceType? = self.whatPieceIsOn(destSquare)
-            
+            let newHalfMoveClock = capturedPiece == nil ? self.halfmoveClock + 1 : 0
+           
             var newCastlingRights: [CastlingRights]
             if capturedPiece == .rook {
                 if playerToGenerate == .white { // remove black's ability to castle the direction we took their rook
@@ -650,6 +665,7 @@ extension BoardState {
                     blackRooks: self.blackRooks & ~destbb,
                     blackQueens: self.blackQueens & ~destbb,
                     blackKing: self.blackKing & ~destbb,
+                    halfmoveClock: newHalfMoveClock,
                     plyNumber: self.plyNumber+1,
                     playerToMove: self.playerToMove.opposite(),
                     enpassantTargetSqauare: Bitboard.empty,
@@ -682,6 +698,7 @@ extension BoardState {
                     blackRooks: newRookBoard,
                     blackQueens: self.blackQueens,
                     blackKing: destbb,
+                    halfmoveClock: newHalfMoveClock,
                     plyNumber: self.plyNumber+1,
                     playerToMove: self.playerToMove.opposite(),
                     enpassantTargetSqauare: Bitboard.empty,

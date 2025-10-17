@@ -39,6 +39,7 @@ import zBitboard
         blackRooks: Bitboard.squareMask(.a8) | Bitboard.squareMask(.f8),
         blackQueens: .empty,
         blackKing: Bitboard.squareMask(.c6),
+        halfmoveClock: 0,
         plyNumber: 37,
         playerToMove: .black,
         enpassantTargetSqauare: .empty,
