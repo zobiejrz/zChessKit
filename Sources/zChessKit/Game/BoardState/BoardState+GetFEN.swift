@@ -8,7 +8,7 @@
 import zBitboard
 
 extension BoardState {
-    func getFEN() -> String {
+    public func getFEN() -> String {
         var piecePlacement = ""
 
         for i in Rank.allCases.reversed() { 
