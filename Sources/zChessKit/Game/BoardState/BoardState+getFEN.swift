@@ -1,5 +1,5 @@
 //
-//  BoardState.swift
+//  BoardState+getFEN.swift
 //  zChessKit
 //
 //  Created by Grayson Adams on 10/16/25.
