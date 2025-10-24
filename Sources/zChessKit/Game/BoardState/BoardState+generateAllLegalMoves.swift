@@ -802,7 +802,7 @@ extension BoardState {
                 let file = Int("abcdefgh".distance(from: "abcdefgh".startIndex, to: fileIndex)) + 1 // 1...8
                 
                 if (Bitboard.file(file)! & mask) > 0 && piece != .pawn {
-                    output += String(file)
+                    output += String(fileChar)
                 } else if piece != .pawn {
                     output += String(rankChar)
                 }
