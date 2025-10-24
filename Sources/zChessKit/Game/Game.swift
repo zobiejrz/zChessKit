@@ -93,9 +93,9 @@ public class Game {
             case "1/2-1/2":
                 return .draw
             case "1-0":
-                return .checkmate
+                return .whiteWon
             case "0-1":
-                return .checkmate
+                return .blackWon
             case "*":
                 return .ongoing
             default:
@@ -105,7 +105,7 @@ public class Game {
         
         if self.currentState.generateAllLegalMoves().isEmpty {
             if self.currentState.isKingInCheck() {
-                return .checkmate
+                return self.currentState.playerToMove == .white ? .blackWon : .whiteWon
             } else {
                 return .draw
             }

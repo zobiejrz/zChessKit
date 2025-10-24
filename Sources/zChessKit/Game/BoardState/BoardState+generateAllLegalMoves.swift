@@ -801,9 +801,9 @@ extension BoardState {
                 let fileIndex = "abcdefgh".firstIndex(of: fileChar)!
                 let file = Int("abcdefgh".distance(from: "abcdefgh".startIndex, to: fileIndex)) + 1 // 1...8
                 
-                if (Bitboard.file(file)! & mask) == mask {
+                if (Bitboard.file(file)! & mask) > 0 && piece != .pawn {
                     output += String(fileChar)
-                } else {
+                } else if piece != .pawn {
                     output += String(rankChar)
                 }
             } else if mask.nonzeroBitCount >= 3 { // two disambiguation needed
@@ -828,7 +828,7 @@ extension BoardState {
             
             // --- promotion (if applicable) ---
             if let p = promotion {
-                output += "=\(p.toLetter())"
+                output += "=\(p.toLetter().uppercased())"
             }
         }
         

@@ -100,10 +100,10 @@ import Testing
     #expect(game.getGameResult() == .draw, "Result is set in the tags")
     
     game.setGamedata(for: "Result", value: "1-0")
-    #expect(game.getGameResult() == .checkmate, "Result is set in the tags")
+    #expect(game.getGameResult() == .whiteWon, "Result is set in the tags")
     
     game.setGamedata(for: "Result", value: "0-1")
-    #expect(game.getGameResult() == .checkmate, "Result is set in the tags")
+    #expect(game.getGameResult() == .blackWon, "Result is set in the tags")
     
     game.setGamedata(for: "Result", value: "*")
     #expect(game.getGameResult() == .ongoing, "Result is set in the tags")
@@ -120,7 +120,7 @@ import Testing
     game.makeSANMove("Qh4#")
     
     game.setGamedata(for: "Result", value: nil)
-    #expect(game.getGameResult() == .checkmate, "Game is ended in checkmate")
+    #expect(game.getGameResult() == .blackWon, "Game is ended in checkmate")
     
     let drawGame = Game(initialBoardState: BoardState.fromFEN("K7/1r6/2k5/8/8/8/8/8 w - - 0 1")!)
     #expect(drawGame.getGameResult() == .draw, "Game is ended in draw")    

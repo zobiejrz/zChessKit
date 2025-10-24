@@ -6,5 +6,8 @@
 //
 
 public enum GameResult {
-    case ongoing, checkmate, draw
+    case ongoing
+    case whiteWon
+    case blackWon
+    case draw
 }

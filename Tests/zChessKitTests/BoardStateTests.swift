@@ -436,3 +436,31 @@ import Testing
 //        print("string \(i) = \(state == nil ? "passed": "failed")")
     }
 }
+
+@Test func testDisambiguation() async throws {
+    let PGN = """
+        [Event "?"]
+        [Site "?"]
+        [Date "????.??.??"]
+        [Round "?"]
+        [White "?"]
+        [Black "?"]
+        [Result "*"]
+        
+        1. h3 $6 h6 $6 2. b3 $6 c6 3. e3 g6 $6 4. a4 $6 Nf6 $6 5. Ke2 $2 d6 6. Ra2 $2 h5 $9 7. a5 $9
+        h4 $9 8. Ra3 $9 g5 $6 9. b4 $2 a6 $9 10. Rc3 $9 Ne4 $9 11. Rd3 $9 e5 12. Ra3 $6 d5 $6 13.
+        f3 $2 Ng3+ $1 14. Kf2 c5 15. Bb2 cxb4 16. Rd3 b3 $6 17. c4 b5 18. Qe1 $6 bxc4 19. Nc3
+        cxd3 20. Nxd5 $2 Nxf1 $9 21. Ne2 dxe2 22. Nb4 g4 23. Bc3 gxf3 24. Kg1 fxg2 25.
+        Qxf1 $2 e1=N $9 26. Nxa6 $6 gxf1=N 27. d4 b2 28. d5 b1=Q 29. Nc5 $6 f6 $9 30. Bd2 Nc2
+        31. Bb4 Nfxe3+ 32. Be1 Nxe1 $9 33. Nd3 Nxd3+ 34. Kh2 Ne1 35. a6 $6 Nc4 $9 36. Rxe1
+        Nd2 37. Re2 Nf3+ 38. Kg2 e4 39. Rxe4+ Qxe4 40. a7 Nd2+ 41. Kf2 Nc4 $9 42. axb8=B
+        Nd2 43. Bh2 $6 Nb1 $9 44. Bc7 Nd2 45. Bb8 $6 Nb1 $9 46. Bd6 Nd2 47. Be7 Nb3 48. Bxd8
+        f5 49. Kf1 Nd2+ 50. Kg1 Nf3+ *
+        """
+    
+    let tokens = try! Lexer.getPGNLexer().run(input: PGN)
+    let result = try! Parser.parsePGN(from: tokens)
+    let game = result.first!
+    
+    print(game.getPGN())
+}
