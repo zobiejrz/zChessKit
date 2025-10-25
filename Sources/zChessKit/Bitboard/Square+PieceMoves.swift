@@ -9,7 +9,7 @@ import zBitboard
 
 extension Square {
     
-    static func generateKnightMoves(_ sq: Square, blockers: Bitboard = Bitboard.empty) -> Bitboard {
+    public static func generateKnightMoves(_ sq: Square, blockers: Bitboard = Bitboard.empty) -> Bitboard {
         // - All L-shaped jumps (8 directions)
         // - Avoid friendly fire
         
@@ -24,7 +24,7 @@ extension Square {
         return total
     }
     
-    static func slidingBishopAttacks(at sq: Square, blockers: Bitboard = Bitboard.empty) -> Bitboard {
+    public static func slidingBishopAttacks(at sq: Square, blockers: Bitboard = Bitboard.empty) -> Bitboard {
         let file0 = sq.rawValue & 7
         let rank0 = sq.rawValue >> 3
         
@@ -48,7 +48,7 @@ extension Square {
         return attacks
     }
 
-    static func slidingRookAttacks(at sq: Square, blockers: Bitboard = Bitboard.empty) -> Bitboard {
+    public static func slidingRookAttacks(at sq: Square, blockers: Bitboard = Bitboard.empty) -> Bitboard {
         let file0 = sq.rawValue & 7
         let rank0 = sq.rawValue >> 3
         
@@ -73,8 +73,7 @@ extension Square {
         return attacks
     }
     
-    static func slidingQueenAttacks(at sq: Square, blockers: Bitboard = Bitboard.empty) -> Bitboard {
+    public static func slidingQueenAttacks(at sq: Square, blockers: Bitboard = Bitboard.empty) -> Bitboard {
         return Square.slidingBishopAttacks(at: sq, blockers: blockers) | Square.slidingRookAttacks(at: sq, blockers: blockers)
     }
-    
 }
