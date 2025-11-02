@@ -278,7 +278,7 @@ import Testing
     
     let move = game.moves.first!
     
-    #expect(move.san == "e4", "These need to match")
+    #expect(game.initialBoardState.generateSAN(for: move) == "e4", "These need to match")
 }
 
 @Test func testGetPGN() async throws {

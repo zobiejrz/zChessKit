@@ -33,8 +33,7 @@ import zBitboard
             enpassantTargetSqauare: Bitboard.squareMask(.e3),
             castlingRights: [.K,.Q,.k,.q]),
         ply: 1,
-        color: .black,
-        san: "e4"
+        color: .black
     )
     let secondMove = Move(
         from: .d2,
@@ -59,8 +58,7 @@ import zBitboard
             enpassantTargetSqauare: Bitboard.squareMask(.d3),
             castlingRights: [.K,.Q,.k,.q]),
         ply: 1,
-        color: .black,
-        san: "d4"
+        color: .black
     )
     let initialState = BoardState.startingPosition()
     let moveA = initialState.isValidSANMove("e4")

@@ -57,12 +57,13 @@ extension Game {
         
         // --- Format Move Text ---
         var moveNumber = 1
+        var prevBoardState: BoardState = initialBoardState
         for move in self.moves {
             let moveText: String
             if move.color == .black {
-                moveText = "\(moveNumber != 1 ? " " : "")\(moveNumber). \(move.san)"
+                moveText = "\(moveNumber != 1 ? " " : "")\(moveNumber). \(prevBoardState.generateSAN(for: move))"
             } else {
-                moveText = " \(move.san)"
+                moveText = " \(prevBoardState.generateSAN(for: move))"
                 moveNumber += 1
             }
             pgn.append(moveText)
@@ -70,6 +71,7 @@ extension Game {
             if move == self.moves.last {
                 pgn.append(" \(self.gamedata["Result"] ?? "*")")
             }
+            prevBoardState = move.resultingBoardState
         }
 
         return pgn

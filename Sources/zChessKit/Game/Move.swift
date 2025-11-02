@@ -23,7 +23,6 @@ public struct Move {
     public let isCastling: Bool
     
     // MARK: - Move Notation
-    public let san: String
     public let uci: String
 
     // MARK: - Annotations
@@ -44,7 +43,6 @@ public struct Move {
         ply: Int,
         color: PlayerColor,
         isCastling: Bool = false,
-        san: String,
         annotation: String? = nil,
         nags: [Int] = [],
         variations: [Move] = []
@@ -58,7 +56,6 @@ public struct Move {
         self.ply = ply
         self.color = color
         self.isCastling = isCastling
-        self.san = san
         self.uci = "\(from)\(to)\(promotion?.toLetter() ?? "")"
         self.annotation = annotation
         self.nags = nags

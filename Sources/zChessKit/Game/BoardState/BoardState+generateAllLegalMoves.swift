@@ -140,16 +140,6 @@ extension BoardState {
                     continue
                 }
                 
-                let sanMove = self.generateSAN(
-                    from: originSquare,
-                    to: destSquare,
-                    piece: .pawn,
-                    capturedPiece: capturedPiece,
-                    promotion: promotion,
-                    isCastling: false,
-                    resultingBoardState: resultingBoardState
-                )
-                
                 let move = Move(
                     from: originSquare,
                     to: destSquare,
@@ -158,8 +148,7 @@ extension BoardState {
                     promotion: promotion,
                     resultingBoardState: resultingBoardState,
                     ply: self.plyNumber+1,
-                    color: self.playerToMove.opposite(),
-                    san: sanMove
+                    color: self.playerToMove.opposite()
                 )
                 output.append(move)
             }
@@ -246,16 +235,6 @@ extension BoardState {
                 continue
             }
             
-            let sanMove = self.generateSAN(
-                from: originSquare,
-                to: destSquare,
-                piece: .knight,
-                capturedPiece: capturedPiece,
-                promotion: nil,
-                isCastling: false,
-                resultingBoardState: resultingBoardState
-            )
-            
             let move = Move(
                 from: originSquare,
                 to: destSquare,
@@ -264,8 +243,7 @@ extension BoardState {
                 promotion: nil,
                 resultingBoardState: resultingBoardState,
                 ply: self.plyNumber+1,
-                color: self.playerToMove.opposite(),
-                san: sanMove
+                color: self.playerToMove.opposite()
             )
             
             output.append(move)
@@ -352,16 +330,6 @@ extension BoardState {
                 continue
             }
             
-            let sanMove = self.generateSAN(
-                from: originSquare,
-                to: destSquare,
-                piece: .bishop,
-                capturedPiece: capturedPiece,
-                promotion: nil,
-                isCastling: false,
-                resultingBoardState: resultingBoardState
-            )
-            
             let move = Move(
                 from: originSquare,
                 to: destSquare,
@@ -370,8 +338,7 @@ extension BoardState {
                 promotion: nil,
                 resultingBoardState: resultingBoardState,
                 ply: self.plyNumber+1,
-                color: self.playerToMove.opposite(),
-                san: sanMove
+                color: self.playerToMove.opposite()
             )
             
             output.append(move)
@@ -470,16 +437,6 @@ extension BoardState {
                 continue
             }
             
-            let sanMove = self.generateSAN(
-                from: originSquare,
-                to: destSquare,
-                piece: .rook,
-                capturedPiece: capturedPiece,
-                promotion: nil,
-                isCastling: false,
-                resultingBoardState: resultingBoardState
-            )
-            
             let move = Move(
                 from: originSquare,
                 to: destSquare,
@@ -488,8 +445,7 @@ extension BoardState {
                 promotion: nil,
                 resultingBoardState: resultingBoardState,
                 ply: self.plyNumber+1,
-                color: self.playerToMove.opposite(),
-                san: sanMove
+                color: self.playerToMove.opposite()
             )
             
             output.append(move)
@@ -576,16 +532,6 @@ extension BoardState {
                 continue
             }
             
-            let sanMove = self.generateSAN(
-                from: originSquare,
-                to: destSquare,
-                piece: .queen,
-                capturedPiece: capturedPiece,
-                promotion: nil,
-                isCastling: false,
-                resultingBoardState: resultingBoardState
-            )
-            
             let move = Move(
                 from: originSquare,
                 to: destSquare,
@@ -594,8 +540,7 @@ extension BoardState {
                 promotion: nil,
                 resultingBoardState: resultingBoardState,
                 ply: self.plyNumber+1,
-                color: self.playerToMove.opposite(),
-                san: sanMove
+                color: self.playerToMove.opposite()
             )
             
             output.append(move)
@@ -711,16 +656,6 @@ extension BoardState {
                 continue
             }
             
-            let sanMove = self.generateSAN(
-                from: originSquare,
-                to: destSquare,
-                piece: .king,
-                capturedPiece: capturedPiece,
-                promotion: nil,
-                isCastling: isCastling,
-                resultingBoardState: resultingBoardState
-            )
-            
             let move = Move(
                 from: originSquare,
                 to: destSquare,
@@ -730,118 +665,13 @@ extension BoardState {
                 resultingBoardState: resultingBoardState,
                 ply: self.plyNumber+1,
                 color: self.playerToMove.opposite(),
-                isCastling: isCastling,
-                san: sanMove
+                isCastling: isCastling
             )
             
             output.append(move)
         }
         
         // 4. Return resulting legal [Move] list
-        return output
-    }
-    
-    // MARK: - generateSAN
-    private func generateSAN(
-        from originSquare: Square,
-        to destSquare: Square,
-        piece: PieceType,
-        capturedPiece: PieceType?,
-        promotion: PieceType?,
-        isCastling: Bool,
-        resultingBoardState: BoardState
-    ) -> String {
-        
-        var output: String = ""
-        
-        // --- Handle Castling ---
-        if isCastling && piece == .king {
-            let tmp = Bitboard.file(7)! & (resultingBoardState.blackKing | resultingBoardState.whiteKing) & Bitboard.squareMask(destSquare)
-            
-            output = tmp.hasPiece(on: destSquare) ? "O-O" : "O-O-O"
-        } else { // Get the piece, disambiguation, capturing, destination, and promotion together
-            
-            // --- only file for pawns ---
-            if piece != .pawn {
-                output += "\(piece.toLetter().uppercased())"
-            }
-            
-            // --- disambiguation (if applicable) ---
-            let destbb = Bitboard.squareMask(destSquare)
-            
-            let mask: Bitboard
-            switch piece {
-            case .pawn:
-                if capturedPiece != nil {
-                    let others = playerToMove == .white ? self.whitePawns : self.blackPawns
-                    mask = (playerToMove == .white ? destbb.seShift() | destbb.swShift() : destbb.neShift() | destbb.nwShift()) & others
-                } else {
-                    mask = .empty
-                }
-            case .knight:
-                let others = playerToMove == .white ? self.whiteKnights : self.blackKnights
-                mask = Square.generateKnightMoves(destSquare) & others
-            case .bishop:
-                let others = playerToMove == .white ? self.whiteBishops : self.blackBishops
-                mask = Square.slidingBishopAttacks(at: destSquare, blockers: self.allPieces) & others
-            case .rook:
-                let others = playerToMove == .white ? self.whiteRooks : self.blackRooks
-                mask = Square.slidingRookAttacks(at: destSquare, blockers: self.allPieces) & others
-            case .queen:
-                let others = playerToMove == .white ? self.whiteQueens : self.blackQueens
-                mask = Square.slidingQueenAttacks(at: destSquare, blockers: self.allPieces) & others
-            case .king:
-                mask = .empty // this makes no sense but like needs to be exhaustive ig
-            }
-            
-            if mask.nonzeroBitCount == 2 { // one disambiguation needed
-                let fileChar = ("\(originSquare)".first!)
-                let rankChar = ("\(originSquare)".last!)
-                
-                let fileIndex = "abcdefgh".firstIndex(of: fileChar)!
-                let file = Int("abcdefgh".distance(from: "abcdefgh".startIndex, to: fileIndex)) + 1 // 1...8
-                
-                if (Bitboard.file(file)! & mask) > 0 && piece != .pawn {
-                    output += String(rankChar)
-                } else if piece != .pawn {
-                    output += String(fileChar)
-                }
-            } else if mask.nonzeroBitCount >= 3 { // two disambiguation needed
-                output += "\(originSquare)"
-            } else { // disambiguation not needed
-            }
-            
-            // --- whether we are capturing ---
-            if capturedPiece != nil {
-                if piece == .pawn {
-                    output += String("\(originSquare)".first!)
-                }
-                output += "x"
-            }
-            // --- destination square ---
-            output += "\(destSquare)"
-            
-            // --- e.p. (if applicable) ---
-            if piece == .pawn && destbb == self.enpassantTargetSquare {
-                output += " e.p."
-            }
-            
-            // --- promotion (if applicable) ---
-            if let p = promotion {
-                output += "=\(p.toLetter().uppercased())"
-            }
-        }
-        
-        // --- handle whether check/checkmate ---
-        
-        if resultingBoardState.isKingInCheck() {
-            if resultingBoardState.generateAllLegalMoves().count == 0 {
-                output += "#"
-            } else {
-                output += "+"
-            }
-        }
-        
         return output
     }
 }
