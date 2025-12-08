@@ -59,9 +59,13 @@ extension BoardState {
                 let fileIndex = "abcdefgh".firstIndex(of: fileChar)!
                 let file = Int("abcdefgh".distance(from: "abcdefgh".startIndex, to: fileIndex)) + 1 // 1...8
                 
-                if (Bitboard.file(file)! & mask) > 0 && move.piece != .pawn {
+                // Check if both pieces are on the same file
+                let piecesOnFile = Bitboard.file(file)! & mask
+                if piecesOnFile.nonzeroBitCount == 2 && move.piece != .pawn {
+                    // Both pieces on same file, need rank to disambiguate
                     output += String(rankChar)
                 } else if move.piece != .pawn {
+                    // Pieces on different files, file alone disambiguates
                     output += String(fileChar)
                 }
             } else if mask.nonzeroBitCount >= 3 { // two disambiguation needed
